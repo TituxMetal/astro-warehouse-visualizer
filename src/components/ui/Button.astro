@@ -1,0 +1,15 @@
+---
+export interface Props extends astroHTML.JSX.ButtonHTMLAttributes {
+  type?: 'button' | 'submit' | 'reset'
+  class?: string
+}
+
+const { type = 'button', class: className = '' } = Astro.props
+---
+
+<button
+  type={type}
+  class={`px-4 py-2 border-2 border-transparent font-bold text-zinc-900 bg-blue-400 rounded-lg hover:bg-blue-400/80 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 focus:ring-offset-transparent ${className}`}
+>
+  <slot />
+</button>

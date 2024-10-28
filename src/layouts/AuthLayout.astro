@@ -1,0 +1,33 @@
+---
+import '~/styles/globals.css'
+
+type Props = {
+  title: string
+}
+
+const { title } = Astro.props
+---
+
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+    <meta name='viewport' content='width=device-width' />
+    <meta name='generator' content={Astro.generator} />
+    <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+    <title>{title}</title>
+  </head>
+  <body class='m-auto min-h-screen'>
+    <main
+      class='m-auto flex w-full max-w-md flex-1 flex-col items-center justify-center py-6 md:justify-normal'
+    >
+      <h1 class='pb-8 text-center text-2xl/relaxed font-bold md:text-4xl/relaxed'>{title}</h1>
+      <a
+        href='/'
+        class='w-fit rounded-lg border-2 border-transparent bg-blue-400 px-4 py-2 font-bold text-zinc-900 hover:bg-blue-400/80 focus:outline-none focus:ring-2 focus:ring-sky-300 focus:ring-offset-2 focus:ring-offset-transparent'
+        >Go to home</a
+      >
+      <slot />
+    </main>
+  </body>
+</html>

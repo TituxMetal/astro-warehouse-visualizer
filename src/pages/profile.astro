@@ -1,0 +1,14 @@
+---
+import BaseLayout from '~/layouts/BaseLayout.astro'
+
+const { session } = Astro.locals
+
+if (!session) {
+  return Astro.redirect('/login')
+}
+---
+
+<BaseLayout title='Profile'>
+  <h1>Profile</h1>
+  <p>Welcome to your profile page</p>
+</BaseLayout>

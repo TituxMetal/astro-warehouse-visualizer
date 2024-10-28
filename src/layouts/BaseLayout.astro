@@ -1,0 +1,59 @@
+---
+import '~/styles/globals.css'
+
+import { actions } from 'astro:actions'
+const { session, user } = Astro.locals
+
+type Props = {
+  title: string
+}
+
+const { title } = Astro.props
+const formattedUsername = user && user.username?.charAt(0).toUpperCase() + user.username?.slice(1)
+---
+
+<html lang='en'>
+  <head>
+    <meta charset='utf-8' />
+    <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+    <meta name='viewport' content='width=device-width' />
+    <meta name='generator' content={Astro.generator} />
+    <link rel='icon' type='image/svg+xml' href='/favicon.svg' />
+    <title>{title}</title>
+  </head>
+  <body class='min-h-screen'>
+    <header class='flex items-center justify-between bg-sky-900 p-6 font-semibold text-neutral-100'>
+      <nav class='mx-auto flex w-full max-w-screen-xl gap-4'>
+        <ul class='flex w-full items-center gap-4'>
+          <li>
+            <a href='/'>Home</a>
+          </li>
+          <li>
+            <a href='/warehouse/visualizer'>Warehouse Visualizer</a>
+          </li>
+          {
+            session ? (
+              <>
+                <li>
+                  <a href='/profile'>{formattedUsername}'s Profile</a>
+                </li>
+                <li>
+                  <form method='POST' action={actions.logout}>
+                    <button>Logout</button>
+                  </form>
+                </li>
+              </>
+            ) : (
+              <li>
+                <a href='/login'>Login</a>
+              </li>
+            )
+          }
+        </ul>
+      </nav>
+    </header>
+    <main class='mx-auto flex w-full max-w-screen-xl flex-1 flex-col py-6'>
+      <slot />
+    </main>
+  </body>
+</html>

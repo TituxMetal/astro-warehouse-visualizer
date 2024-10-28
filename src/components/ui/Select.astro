@@ -1,0 +1,25 @@
+---
+export interface Option {
+  value: string | number
+  label: string
+}
+
+export interface Props {
+  name: string
+  options: Option[]
+  required?: boolean
+  multiple?: boolean
+  class?: string
+}
+
+const { name, options, required = false, multiple = false, class: className = '' } = Astro.props
+---
+
+<select
+  name={name}
+  required={required}
+  multiple={multiple}
+  class={`w-full px-3 py-2 text-zinc-300 border rounded-lg focus:outline-none focus:border-blue-500 ${className}`}
+>
+  {options.map(option => <option value={option.value}>{option.label}</option>)}
+</select>

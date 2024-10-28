@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply h-full;
+  }
+
+  body {
+    @apply flex min-h-screen flex-col bg-zinc-900 font-sans text-neutral-100 antialiased;
+  }
+
+  @media (prefers-color-scheme: dark) or (prefers-color-scheme: light) {
+    html {
+      color-scheme: dark;
+    }
+  }
+}

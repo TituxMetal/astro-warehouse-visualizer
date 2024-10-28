@@ -1,0 +1,9 @@
+---
+import { AuthForm } from '~/components/AuthForm'
+
+import AuthLayout from '~/layouts/AuthLayout.astro'
+---
+
+<AuthLayout title='Signup to your account'>
+  <AuthForm client:load mode='signup' />
+</AuthLayout>
