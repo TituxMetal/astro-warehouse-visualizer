@@ -1,0 +1,28 @@
+---
+// src/pages/warehouse/cell/[cell]/aisle/[aisle].astro
+import { ViewTransitions } from 'astro:transitions'
+import { AisleVisualization } from '~/components/AisleVisualization'
+import { Breadcrumb } from '~/components/Breadcrumb'
+import BaseLayout from '~/layouts/BaseLayout.astro'
+import { getCellConfig } from '~/utils/warehouse'
+
+export const prerender = false
+
+const { cell, aisle } = Astro.params
+const cellNumber = parseInt(cell || '1')
+const aisleNumber = parseInt(aisle || '1')
+
+const config = getCellConfig(cellNumber)
+if (!config || aisleNumber < 1 || aisleNumber > config.aislesCount) {
+  return Astro.redirect('/warehouse')
+}
+---
+
+<BaseLayout title={`Cell ${cellNumber} - Aisle ${aisleNumber}`}>
+  <ViewTransitions />
+
+  <main class='container mx-auto px-4 py-8'>
+    <Breadcrumb cell={cellNumber} aisle={aisleNumber} client:load />
+    <AisleVisualization cell={cellNumber} aisle={aisleNumber} client:load />
+  </main>
+</BaseLayout>
