@@ -1,5 +1,15 @@
 ---
 import BaseLayout from '~/layouts/BaseLayout.astro'
+import { formatAddress, getCellConfig, parseFullAddress } from '~/utils/warehouse'
+
+const address = '1-001-0026-40'
+const parsedAddress = parseFullAddress(address)
+
+if (parsedAddress) {
+  console.log('parsedAddress', parsedAddress)
+  console.log('formatAddress', formatAddress(parsedAddress))
+  console.log('cellConfig', getCellConfig(parsedAddress.cell))
+}
 ---
 
 <BaseLayout title='Home'> THIS IS THE HOME PAGE </BaseLayout>
