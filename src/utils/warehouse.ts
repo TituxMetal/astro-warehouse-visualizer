@@ -66,7 +66,13 @@ export const getCellConfig = (cellNumber: number): CellConfig => {
  * @returns Array of valid level numbers
  */
 export const getValidLevels = (levelsCount: number): readonly number[] => {
-  return Array.from({ length: levelsCount }, (_, i) => (i + 1) * LEVEL_CONSTRAINTS.STEP)
+  // Start with picking level
+  const levels = [LEVEL_CONSTRAINTS.PICKING]
+  // Add storage levels
+  for (let i = 0; i < levelsCount; i++) {
+    levels.push(((i + 1) * LEVEL_CONSTRAINTS.STEP) as 0)
+  }
+  return levels
 }
 
 /**
@@ -164,8 +170,9 @@ export const isValidLocation = (location: string): boolean => {
   const match = normalized.match(/^(\d{4})-(\d{2})$/)
   if (!match) return false
 
-  const [_, __, level] = match.map(Number)
-  return level % 10 === 0 && level >= 10 && level <= 40
+  const [_, levelStr] = match
+  const level = parseInt(levelStr)
+  return isValidLevel(level)
 }
 
 /**
@@ -174,10 +181,10 @@ export const isValidLocation = (location: string): boolean => {
  */
 const isValidLevel = (level: number): boolean => {
   return (
-    Number.isInteger(level) &&
-    level % LEVEL_CONSTRAINTS.STEP === 0 &&
-    level >= LEVEL_CONSTRAINTS.MIN &&
-    level <= LEVEL_CONSTRAINTS.MAX
+    level === 0 ||
+    (level % LEVEL_CONSTRAINTS.STEP === 0 &&
+      level >= LEVEL_CONSTRAINTS.STEP &&
+      level <= LEVEL_CONSTRAINTS.MAX)
   )
 }
 
