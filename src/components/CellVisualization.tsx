@@ -36,19 +36,19 @@ export const CellVisualization = ({ cell }: Props) => {
         <h3 className='mb-4 text-lg font-semibold'>Cell Statistics</h3>
         <div className='grid grid-cols-2 gap-4 md:grid-cols-4'>
           <div className='rounded-lg bg-zinc-700 p-4'>
-            <div className='text-sm text-zinc-400'>Aisles</div>
+            <div className='text-sm text-zinc-300'>Aisles</div>
             <div className='text-2xl font-bold'>{config.aislesCount}</div>
           </div>
           <div className='rounded-lg bg-zinc-700 p-4'>
-            <div className='text-sm text-zinc-400'>Locations per Aisle</div>
+            <div className='text-sm text-zinc-300'>Locations per Aisle</div>
             <div className='text-2xl font-bold'>{config.locationsPerAisle}</div>
           </div>
           <div className='rounded-lg bg-zinc-700 p-4'>
-            <div className='text-sm text-zinc-400'>Levels</div>
+            <div className='text-sm text-zinc-300'>Levels</div>
             <div className='text-2xl font-bold'>{config.levelsPerLocation}</div>
           </div>
           <div className='rounded-lg bg-zinc-700 p-4'>
-            <div className='text-sm text-zinc-400'>Total Locations</div>
+            <div className='text-sm text-zinc-300'>Total Locations</div>
             <div className='text-2xl font-bold'>
               {config.aislesCount * config.locationsPerAisle * config.levelsPerLocation}
             </div>
