@@ -11,7 +11,7 @@ const dbUrl = `file://${dbPath}`
 
 // 2. Instantiate libSQL
 export const libsql = createClient({
-  url: isDevMode ? dbUrl : process.env.TURSO_DATABASE_URL!,
+  url: isDevMode ? dbUrl : process.env.DATABASE_URL!,
   authToken: process.env.TURSO_AUTH_TOKEN!,
   syncUrl: isDevMode ? process.env.TURSO_DATABASE_URL! : undefined,
   syncInterval: 600
