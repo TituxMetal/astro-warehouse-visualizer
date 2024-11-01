@@ -61,10 +61,12 @@ export const WarehouseVisualization = ({ fullLocation }: Props) => {
                             className={`flex h-6 items-center justify-center rounded-sm border text-xs ${
                               isSelectedPosition && fullLocation.level === level
                                 ? 'border-green-400 bg-green-400 font-bold text-zinc-800'
-                                : 'border-zinc-400'
+                                : level === 0
+                                  ? 'border-amber-400 bg-amber-900 font-semibold text-amber-200'
+                                  : 'border-zinc-400'
                             }`}
                           >
-                            {level}
+                            {level.toString().padStart(2, '0')}
                           </div>
                         ))}
                       </div>
