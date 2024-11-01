@@ -28,7 +28,8 @@ import BaseLayout from '~/layouts/BaseLayout.astro'
             <li><strong>Aisle:</strong> A numbered corridor within a cell (e.g., 016)</li>
             <li><strong>Position:</strong> A specific location along the aisle (e.g., 0026)</li>
             <li>
-              <strong>Level:</strong> The vertical position in multiples of 10 (10, 20, 30, 40)
+              <strong>Level:</strong> The vertical position, including picking level (00) and storage
+              levels in multiples of 10 (10, 20, 30, 40)
             </li>
           </ul>
           <p>
@@ -62,8 +63,8 @@ import BaseLayout from '~/layouts/BaseLayout.astro'
             <li>Cell 4: 16 aisles with 100 positions each</li>
           </ul>
           <p>
-            Each position can have up to 4 levels (10, 20, 30, 40), providing flexible storage
-            options for different types of inventory.
+            Each position can have a picking level (00) and up to 4 storage levels (10, 20, 30, 40),
+            providing flexible options for both order picking and storage operations.
           </p>
         </div>
       </section>
