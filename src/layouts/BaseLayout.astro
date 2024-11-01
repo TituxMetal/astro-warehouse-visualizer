@@ -1,6 +1,7 @@
 ---
 import '~/styles/globals.css'
 
+import { Icon } from 'astro-icon/components'
 import { actions } from 'astro:actions'
 const { session, user } = Astro.locals
 
@@ -55,8 +56,22 @@ const formattedUsername = user && user.username?.charAt(0).toUpperCase() + user.
         </ul>
       </nav>
     </header>
-    <main class='mx-auto flex w-full max-w-screen-xl flex-1 flex-col py-6'>
+    <main class='mx-auto flex h-full w-full max-w-screen-xl flex-1 flex-col py-6'>
       <slot />
     </main>
+    <footer class='flex flex-col items-center justify-center gap-2 bg-sky-900 p-6 text-neutral-100'>
+      <p class='flex items-center justify-center gap-1 font-semibold'>
+        <Icon name='copy-left' aria-label='copy left icon' class='size-3.5' />
+        {new Date().getFullYear()} Warehouse Location Visualizer.
+      </p>
+      <p>
+        Built by <a
+          class='font-semibold text-sky-300 hover:underline'
+          href='https://github.com/TituxMetal'
+          target='_blank'
+          rel='noopener noreferrer'>Lgdweb</a
+        > with love and lots of coffee.
+      </p>
+    </footer>
   </body>
 </html>
