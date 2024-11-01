@@ -36,9 +36,10 @@ export interface FullLocation extends Location {
  * Validation constraints for warehouse locations
  */
 export const LEVEL_CONSTRAINTS = {
-  MIN: 10,
+  MIN: 0,
   MAX: 40,
-  STEP: 10
+  STEP: 10,
+  PICKING: 0
 } as const
 
 /**
@@ -62,7 +63,7 @@ export const REGEX_PATTERNS = {
  * Warehouse configuration by cell
  */
 export const WAREHOUSE_CONFIG: readonly CellConfig[] = [
-  { cell: 1, aislesCount: 12, locationsPerAisle: 100, levelsPerLocation: 4 },
+  { cell: 1, aislesCount: 12, locationsPerAisle: 137, levelsPerLocation: 4 },
   { cell: 2, aislesCount: 15, locationsPerAisle: 100, levelsPerLocation: 4 },
   { cell: 3, aislesCount: 20, locationsPerAisle: 100, levelsPerLocation: 4 },
   { cell: 4, aislesCount: 16, locationsPerAisle: 100, levelsPerLocation: 4 }
