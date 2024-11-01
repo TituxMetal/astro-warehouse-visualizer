@@ -4,13 +4,16 @@ import { createClient } from '@libsql/client'
 import { PrismaLibSQL } from '@prisma/adapter-libsql'
 import path from 'node:path'
 
+const isDevMode = process.env.NODE_ENV === 'development'
+
 const dbPath = path.join(process.cwd(), 'prisma', 'replica.db')
+const dbUrl = `file://${dbPath}`
 
 // 2. Instantiate libSQL
 export const libsql = createClient({
-  url: `file://${dbPath}`,
+  url: isDevMode ? dbUrl : process.env.TURSO_DATABASE_URL!,
   authToken: process.env.TURSO_AUTH_TOKEN!,
-  syncUrl: process.env.TURSO_DATABASE_URL!,
+  syncUrl: isDevMode ? process.env.TURSO_DATABASE_URL! : undefined,
   syncInterval: 600
 })
 
