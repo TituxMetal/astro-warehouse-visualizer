@@ -234,16 +234,30 @@ export const validateLocation = (location: string): ValidationResult<string> => 
 }
 
 /**
+ * Validates a position number
+ * @private
+ */
+export const isValidPosition = (position: number, config: CellConfig): boolean => {
+  return position > 0 && position <= config.locationsPerAisle
+}
+
+/**
  * Parses a location string into a Location object
  * @throws {WarehouseError} When location format is invalid
  */
 export const parseLocation = (location: string): Location => {
   const validation = validateLocation(location)
+
   if (!validation.success || !validation.data) {
     throw new WarehouseError(validation.error || 'Invalid location', 'INVALID_FORMAT')
   }
 
   const [position, level] = validation.data.split('-').map(Number)
+
+  if (!isValidLevel(level)) {
+    throw new WarehouseError('Invalid level', 'INVALID_FORMAT')
+  }
+
   return { position, level }
 }
 
