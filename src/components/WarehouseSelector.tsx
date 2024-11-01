@@ -46,7 +46,11 @@ export const WarehouseSelector = ({ address }: Props) => {
 
   return (
     <div className='flex flex-col gap-2'>
+      <label htmlFor='warehouse-selector' className='text-zinc-300'>
+        Enter location
+      </label>
       <input
+        id='warehouse-selector'
         type='text'
         value={inputValue}
         onChange={handleAddressChange}
@@ -55,7 +59,7 @@ export const WarehouseSelector = ({ address }: Props) => {
         placeholder='Enter location (e.g., 4-016-0026-10)'
         className={`w-full rounded border px-4 py-2 outline-none focus:ring-2 focus:ring-blue-500 ${error ? 'border-red-500' : 'border-zinc-300'}`}
       />
-      {error && <div className='text-sm text-red-500'>{error}</div>}
+      {error && <div className='text-sm text-red-300'>{error}</div>}
       <div className='text-sm text-zinc-400'>
         Format: cell-aisle-position-level (e.g., 4-016-0026-10)
         <br />
