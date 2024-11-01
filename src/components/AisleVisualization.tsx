@@ -19,6 +19,13 @@ export const AisleVisualization = ({ cell, aisle }: Props) => {
     setSelectedPosition(selectedPosition === position ? null : position)
   }
 
+  const handleKeyPress = (e: React.KeyboardEvent, position: number) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      handlePositionClick(position)
+    }
+  }
+
   return (
     <div className='flex flex-col gap-4'>
       <h2 className='text-2xl font-bold'>
@@ -28,6 +35,7 @@ export const AisleVisualization = ({ cell, aisle }: Props) => {
       <div className='overflow-x-auto'>
         <div
           className='grid gap-4'
+          role='grid'
           style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))' }}
         >
           {Array.from({ length: config.locationsPerAisle }).map((_, index) => {
@@ -36,7 +44,7 @@ export const AisleVisualization = ({ cell, aisle }: Props) => {
             const isSelected = selectedPosition === position
 
             return (
-              <div
+              <button
                 key={`position-${position}`}
                 className={`flex cursor-pointer flex-col gap-2 rounded-lg border p-4 transition-colors ${
                   isSelected
@@ -44,14 +52,21 @@ export const AisleVisualization = ({ cell, aisle }: Props) => {
                     : 'border-zinc-700 hover:border-zinc-500'
                 }`}
                 onClick={() => handlePositionClick(position)}
+                onKeyDown={e => handleKeyPress(e, position)}
+                aria-expanded={isSelected}
+                aria-label={`Position ${formattedPosition}`}
+                tabIndex={0}
               >
                 <div className='text-sm font-semibold text-zinc-300'>
                   Position {formattedPosition}
                 </div>
                 {isSelected && (
-                  <div className='mt-2 grid grid-cols-2 gap-2'>
+                  <div
+                    className='mt-2 grid grid-cols-2 gap-2'
+                    role='group'
+                    aria-label={`Levels for position ${formattedPosition}`}
+                  >
                     {validLevels.map(level => {
-                      // Create the location part (position-level)
                       const location = `${formattedPosition}-${level}`
                       return (
                         <a
@@ -59,6 +74,8 @@ export const AisleVisualization = ({ cell, aisle }: Props) => {
                           href={`/warehouse/cell/${cell}/aisle/${aisle}/${location}`}
                           className='flex items-center justify-center rounded border border-zinc-600 p-2 text-sm transition-colors hover:border-green-600 hover:bg-green-700'
                           onClick={e => e.stopPropagation()}
+                          aria-label={`Level ${level} of position ${formattedPosition}`}
+                          role='link'
                         >
                           Level {level}
                         </a>
@@ -66,7 +83,7 @@ export const AisleVisualization = ({ cell, aisle }: Props) => {
                     })}
                   </div>
                 )}
-              </div>
+              </button>
             )
           })}
         </div>
@@ -76,15 +93,15 @@ export const AisleVisualization = ({ cell, aisle }: Props) => {
         <h3 className='mb-4 text-lg font-semibold'>Aisle Statistics</h3>
         <div className='grid grid-cols-2 gap-4 md:grid-cols-3'>
           <div className='rounded-lg bg-zinc-700 p-4'>
-            <div className='text-sm text-zinc-400'>Positions</div>
+            <div className='text-sm text-zinc-300'>Positions</div>
             <div className='text-2xl font-bold'>{config.locationsPerAisle}</div>
           </div>
           <div className='rounded-lg bg-zinc-700 p-4'>
-            <div className='text-sm text-zinc-400'>Levels per Position</div>
+            <div className='text-sm text-zinc-300'>Levels per Position</div>
             <div className='text-2xl font-bold'>{config.levelsPerLocation}</div>
           </div>
           <div className='rounded-lg bg-zinc-700 p-4'>
-            <div className='text-sm text-zinc-400'>Total Locations</div>
+            <div className='text-sm text-zinc-300'>Total Locations</div>
             <div className='text-2xl font-bold'>
               {config.locationsPerAisle * config.levelsPerLocation}
             </div>
