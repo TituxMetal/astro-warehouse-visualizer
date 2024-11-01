@@ -3,8 +3,7 @@ import { defineConfig } from 'astro/config'
 
 import react from '@astrojs/react'
 import tailwind from '@astrojs/tailwind'
-
-import node from '@astrojs/node'
+import vercel from '@astrojs/vercel/serverless'
 
 export default defineConfig({
   integrations: [react(), tailwind()],
@@ -12,7 +11,5 @@ export default defineConfig({
   security: {
     checkOrigin: true
   },
-  adapter: node({
-    mode: 'standalone'
-  })
+  adapter: vercel()
 })

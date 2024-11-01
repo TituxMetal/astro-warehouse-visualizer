@@ -17,6 +17,7 @@
     "@astrojs/node": "^8.3.4",
     "@astrojs/react": "^3.6.2",
     "@astrojs/tailwind": "5.1.2",
+    "@astrojs/vercel": "^7.8.2",
     "@libsql/client": "^0.14.0",
     "@lucia-auth/adapter-prisma": "^4.0.1",
     "@prisma/adapter-libsql": "^5.21.1",
