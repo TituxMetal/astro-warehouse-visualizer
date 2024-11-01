@@ -63,13 +63,13 @@ import BaseLayout from '~/layouts/BaseLayout.astro'
 
       <section class='space-y-4'>
         <h2 class='text-2xl font-bold'>Example Usage</h2>
-        <div class='rounded-lg bg-zinc-800 p-6'>
-          <h3 class='mb-4 text-lg font-semibold'>Try a Sample Location</h3>
+        <div class='py-6'>
+          <h3 class='mb-4 text-lg font-semibold'>Try Sample Locations</h3>
 
           <div class='grid gap-6 md:grid-cols-2'>
-            {/* Location Details */}
+            {/* Storage Location */}
             <div class='space-y-4'>
-              <p class='text-zinc-300'>View this sample warehouse location:</p>
+              <p class='text-zinc-300'>Storage location example:</p>
               <div class='grid grid-cols-2 gap-3'>
                 <div class='rounded bg-zinc-700 p-3'>
                   <span class='text-sm text-zinc-300'>Cell</span>
@@ -81,7 +81,7 @@ import BaseLayout from '~/layouts/BaseLayout.astro'
                 </div>
                 <div class='rounded bg-zinc-700 p-3'>
                   <span class='text-sm text-zinc-300'>Position</span>
-                  <p class='font-mono text-xl'>0026</p>
+                  <p class='font-mono text-xl'>0010</p>
                 </div>
                 <div class='rounded bg-zinc-700 p-3'>
                   <span class='text-sm text-zinc-300'>Level</span>
@@ -90,15 +90,50 @@ import BaseLayout from '~/layouts/BaseLayout.astro'
               </div>
             </div>
 
-            {/* Quick Access */}
+            {/* Storage Quick Access */}
             <div class='flex flex-col justify-center space-y-4'>
               <p class='text-zinc-300'>Click below to see it in action:</p>
               <a
-                href='/warehouse/cell/4/aisle/16/0026-40'
+                href='/warehouse/cell/4/aisle/16/0010-40'
                 class='group flex items-center justify-between rounded-lg bg-zinc-700 p-4 transition-colors hover:bg-blue-700'
               >
-                <span class='font-mono text-sm'>4-016-0026-40</span>
+                <span class='font-mono text-sm'>4-016-0010-40</span>
                 <span class='text-blue-300 group-hover:text-neutral-100'> View Location → </span>
+              </a>
+            </div>
+
+            {/* Picking Location */}
+            <div class='space-y-4'>
+              <p class='text-zinc-300'>Picking location example:</p>
+              <div class='grid grid-cols-2 gap-3'>
+                <div class='rounded bg-zinc-700 p-3'>
+                  <span class='text-sm text-zinc-300'>Cell</span>
+                  <p class='font-mono text-xl'>4</p>
+                </div>
+                <div class='rounded bg-zinc-700 p-3'>
+                  <span class='text-sm text-zinc-300'>Aisle</span>
+                  <p class='font-mono text-xl'>016</p>
+                </div>
+                <div class='rounded bg-zinc-700 p-3'>
+                  <span class='text-sm text-zinc-300'>Position</span>
+                  <p class='font-mono text-xl'>0010</p>
+                </div>
+                <div class='rounded bg-amber-900 p-3'>
+                  <span class='text-sm text-amber-200'>Level</span>
+                  <p class='font-mono text-xl text-amber-200'>00</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Picking Quick Access */}
+            <div class='flex flex-col justify-center space-y-4'>
+              <p class='text-zinc-300'>Click below to see it in action:</p>
+              <a
+                href='/warehouse/cell/4/aisle/16/0010-00'
+                class='group flex items-center justify-between rounded-lg bg-amber-900 p-4 transition-colors hover:bg-amber-800'
+              >
+                <span class='font-mono text-sm'>4-016-0010-00</span>
+                <span class='text-amber-200 group-hover:text-neutral-100'> View Location → </span>
               </a>
             </div>
           </div>
