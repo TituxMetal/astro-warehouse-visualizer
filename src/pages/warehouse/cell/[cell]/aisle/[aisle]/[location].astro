@@ -6,14 +6,14 @@ import { WarehouseSelector } from '~/components/WarehouseSelector'
 import { WarehouseVisualization } from '~/components/WarehouseVisualization'
 import BaseLayout from '~/layouts/BaseLayout.astro'
 import type { FullLocation } from '~/types/warehouse'
-import { formatAddress, getCellConfig, isValidLocation, parseLocation } from '~/utils/warehouse'
+import { formatAddress, getCellConfig, isValidPosition, parseLocation } from '~/utils/warehouse'
 
 export const prerender = false
 
 const { cell, aisle, location } = Astro.params
 
 // Validate cell, aisle, and location format
-if (!cell || !aisle || !location || !isValidLocation(location)) {
+if (!cell || !aisle || !location) {
   return Astro.redirect('/warehouse')
 }
 
@@ -21,12 +21,13 @@ const cellNumber = parseInt(cell)
 const aisleNumber = parseInt(aisle)
 const cellConfig = getCellConfig(cellNumber)
 
-if (aisleNumber <= 0 || aisleNumber > cellConfig.aislesCount || !isValidLocation(location)) {
+if (!cellConfig) {
   return Astro.redirect('/warehouse')
 }
 
+// Parse location and validate position
 const parsedLocation = parseLocation(location)
-if (parsedLocation.position <= 0 || parsedLocation.position > cellConfig.locationsPerAisle) {
+if (!parsedLocation || !isValidPosition(parsedLocation.position, cellConfig)) {
   return Astro.redirect('/warehouse')
 }
 
