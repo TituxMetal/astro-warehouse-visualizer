@@ -1,0 +1,298 @@
+---
+// src/pages/about.astro
+import { ViewTransitions } from 'astro:transitions'
+import BaseLayout from '~/layouts/BaseLayout.astro'
+---
+
+<BaseLayout title='About - Warehouse Visualizer'>
+  <ViewTransitions />
+
+  <main class='container mx-auto px-4 py-8'>
+    <article class='mx-auto max-w-4xl'>
+      <h1 class='mb-12 text-4xl font-bold'>About Warehouse Visualizer</h1>
+
+      <section class='mb-12'>
+        <p class='mb-8 text-xl text-zinc-300'>
+          The Warehouse Visualizer is a modern web application designed to simplify warehouse
+          location management through intuitive visualization and efficient navigation.
+        </p>
+
+        <div class='prose prose-invert mb-8 max-w-none'>
+          <p>
+            In logistics warehouses, locations are identified using a structured addressing system.
+            Each address consists of four essential components:
+          </p>
+          <ul>
+            <li><strong>Cell:</strong> A major section of the warehouse (numbered 1-4)</li>
+            <li><strong>Aisle:</strong> A numbered corridor within a cell (e.g., 016)</li>
+            <li><strong>Position:</strong> A specific location along the aisle (e.g., 0026)</li>
+            <li>
+              <strong>Level:</strong> The vertical position in multiples of 10 (10, 20, 30, 40)
+            </li>
+          </ul>
+          <p>
+            For example, the address <code>4-016-0026-30</code> represents:
+          </p>
+          <ul>
+            <li>Cell 4</li>
+            <li>Aisle 16</li>
+            <li>Position 26</li>
+            <li>Level 30 (third level)</li>
+          </ul>
+        </div>
+
+        <div class='prose prose-invert mb-12 max-w-none'>
+          <h3>Project Purpose</h3>
+          <p>This visualization tool helps warehouse staff to:</p>
+          <ul>
+            <li>Quickly understand the structure of warehouse addresses</li>
+            <li>Visualize the relative position of locations</li>
+            <li>Validate warehouse addresses</li>
+            <li>Navigate through different warehouse locations efficiently</li>
+            <li>Manage inventory locations more effectively</li>
+          </ul>
+
+          <h3>Warehouse Structure</h3>
+          <p>Our warehouse system is organized into cells, each with its unique configuration:</p>
+          <ul>
+            <li>Cell 1: 12 aisles with 100 positions each</li>
+            <li>Cell 2: 15 aisles with 100 positions each</li>
+            <li>Cell 3: 20 aisles with 100 positions each</li>
+            <li>Cell 4: 16 aisles with 100 positions each</li>
+          </ul>
+          <p>
+            Each position can have up to 4 levels (10, 20, 30, 40), providing flexible storage
+            options for different types of inventory.
+          </p>
+        </div>
+      </section>
+
+      <section class='mb-12'>
+        <h2 class='mb-6 text-2xl font-bold'>Technologies</h2>
+        <ul class='grid grid-cols-1 gap-8 md:grid-cols-2'>
+          <li class='flex flex-col'>
+            <h3 class='mb-2 text-xl font-bold text-blue-400'>
+              <a
+                href='https://astro.build'
+                target='_blank'
+                rel='noopener noreferrer'
+                class='inline-flex items-center gap-2 transition-colors hover:text-blue-300'
+              >
+                Astro
+                <svg class='h-4 w-4' viewBox='0 0 24 24' fill='none' stroke='currentColor'>
+                  <path
+                    d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3'
+                    stroke-width='2'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'></path>
+                </svg>
+              </a>
+            </h3>
+            <p class='text-zinc-300'>
+              Modern static site builder providing excellent performance and routing capabilities
+            </p>
+          </li>
+          <li class='flex flex-col'>
+            <h3 class='mb-2 text-xl font-bold text-blue-400'>
+              <a
+                href='https://react.dev'
+                target='_blank'
+                rel='noopener noreferrer'
+                class='inline-flex items-center gap-2 transition-colors hover:text-blue-300'
+              >
+                React
+                <svg class='h-4 w-4' viewBox='0 0 24 24' fill='none' stroke='currentColor'>
+                  <path
+                    d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3'
+                    stroke-width='2'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'></path>
+                </svg>
+              </a>
+            </h3>
+            <p class='text-zinc-300'>
+              Component-based library for building interactive user interfaces with efficient state
+              management
+            </p>
+          </li>
+          <li class='flex flex-col'>
+            <h3 class='mb-2 text-xl font-bold text-blue-400'>
+              <a
+                href='https://www.typescriptlang.org'
+                target='_blank'
+                rel='noopener noreferrer'
+                class='inline-flex items-center gap-2 transition-colors hover:text-blue-300'
+              >
+                TypeScript
+                <svg class='h-4 w-4' viewBox='0 0 24 24' fill='none' stroke='currentColor'>
+                  <path
+                    d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3'
+                    stroke-width='2'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'></path>
+                </svg>
+              </a>
+            </h3>
+            <p class='text-zinc-300'>
+              Strongly typed programming language ensuring robust code quality and better developer
+              experience
+            </p>
+          </li>
+          <li class='flex flex-col'>
+            <h3 class='mb-2 text-xl font-bold text-blue-400'>
+              <a
+                href='https://tailwindcss.com'
+                target='_blank'
+                rel='noopener noreferrer'
+                class='inline-flex items-center gap-2 transition-colors hover:text-blue-300'
+              >
+                Tailwind CSS
+                <svg class='h-4 w-4' viewBox='0 0 24 24' fill='none' stroke='currentColor'>
+                  <path
+                    d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3'
+                    stroke-width='2'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'></path>
+                </svg>
+              </a>
+            </h3>
+            <p class='text-zinc-300'>
+              Utility-first CSS framework for building modern and responsive user interfaces
+            </p>
+          </li>
+          <li class='flex flex-col'>
+            <h3 class='mb-2 text-xl font-bold text-blue-400'>
+              <a
+                href='https://www.prisma.io'
+                target='_blank'
+                rel='noopener noreferrer'
+                class='inline-flex items-center gap-2 transition-colors hover:text-blue-300'
+              >
+                Prisma
+                <svg class='h-4 w-4' viewBox='0 0 24 24' fill='none' stroke='currentColor'>
+                  <path
+                    d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3'
+                    stroke-width='2'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'></path>
+                </svg>
+              </a>
+            </h3>
+            <p class='text-zinc-300'>
+              Next-generation ORM for Node.js and TypeScript, providing type-safe database access
+              and migrations
+            </p>
+          </li>
+          <li class='flex flex-col'>
+            <h3 class='mb-2 text-xl font-bold text-blue-400'>
+              <a
+                href='https://www.perplexity.ai'
+                target='_blank'
+                rel='noopener noreferrer'
+                class='inline-flex items-center gap-2 transition-colors hover:text-blue-300'
+              >
+                Perplexity AI
+                <svg class='h-4 w-4' viewBox='0 0 24 24' fill='none' stroke='currentColor'>
+                  <path
+                    d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3'
+                    stroke-width='2'
+                    stroke-linecap='round'
+                    stroke-linejoin='round'></path>
+                </svg>
+              </a>
+            </h3>
+            <p class='text-zinc-300'>
+              Advanced AI technology used for generating comprehensive documentation and improving
+              code quality
+            </p>
+          </li>
+        </ul>
+      </section>
+
+      <section class='mb-12'>
+        <h2 class='mb-6 text-2xl font-bold'>Key Features</h2>
+        <ul class='space-y-8'>
+          <li class='border-l-4 border-blue-700 pl-6'>
+            <h3 class='mb-2 text-xl font-bold text-blue-400'>Cell Overview</h3>
+            <p class='text-zinc-300'>
+              A comprehensive view of all warehouse cells, providing quick access to each cell's
+              data and statistics.
+            </p>
+          </li>
+          <li class='border-l-4 border-blue-700 pl-6'>
+            <h3 class='mb-2 text-xl font-bold text-blue-400'>Cell View</h3>
+            <p class='text-zinc-300'>
+              Insightful exploration of all aisles within a selected cell, showing aisle-specific
+              data and allowing navigation to specific aisles.
+            </p>
+          </li>
+          <li class='border-l-4 border-blue-700 pl-6'>
+            <h3 class='mb-2 text-xl font-bold text-blue-400'>Aisle View</h3>
+            <p class='text-zinc-300'>
+              Detailed visualization of positions and levels in each aisle, facilitating efficient
+              location tracking and management.
+            </p>
+          </li>
+          <li class='border-l-4 border-blue-700 pl-6'>
+            <h3 class='mb-2 text-xl font-bold text-blue-400'>Location View</h3>
+            <p class='text-zinc-300'>
+              Accurate and interactive representation of a specific location within the warehouse,
+              with automatic scrolling to relevant content.
+            </p>
+          </li>
+        </ul>
+      </section>
+
+      <section class='mb-12 space-y-4'>
+        <h2 class='mb-6 text-2xl font-bold'>Navigation Structure</h2>
+        <p class='mb-4 text-zinc-300'>
+          The application uses a logical URL structure reflecting the warehouse hierarchy:
+        </p>
+
+        <div class='space-y-2 font-mono text-sm'>
+          <p>
+            <span class='text-blue-400'>/warehouse</span>
+            <span class='text-zinc-400'> - Cells overview</span>
+          </p>
+          <p>
+            <span class='text-blue-400'>/warehouse/cell/[cell]</span>
+            <span class='text-zinc-400'> - Single cell view</span>
+          </p>
+          <p>
+            <span class='text-blue-400'>/warehouse/cell/[cell]/aisle/[aisle]</span>
+            <span class='text-zinc-400'> - Aisle view</span>
+          </p>
+          <p>
+            <span class='text-blue-400'>/warehouse/cell/[cell]/aisle/[aisle]/[location]</span>
+            <span class='text-zinc-400'> - Specific location</span>
+          </p>
+        </div>
+      </section>
+
+      <section class='mb-12 space-y-4'>
+        <h2 class='mb-6 text-2xl font-bold'>Technical Implementation</h2>
+
+        <h3 class='text-xl font-bold text-blue-400'>Address Validation</h3>
+        <p class='text-zinc-300'>
+          Robust validation system ensuring all warehouse addresses follow the correct format and
+          constraints, with proper error handling and user feedback.
+        </p>
+        <h3 class='text-xl font-bold text-blue-400'>Responsive Design</h3>
+        <p class='text-zinc-300'>
+          Mobile-first approach ensuring the application works seamlessly across all device sizes,
+          from smartphones to desktop monitors.
+        </p>
+        <h3 class='text-xl font-bold text-blue-400'>Performance Optimization</h3>
+        <p class='text-zinc-300'>
+          Efficient rendering and state management, with features like automatic scrolling to
+          relevant content and smart content pagination.
+        </p>
+        <h3 class='text-xl font-bold text-blue-400'>Type Safety</h3>
+        <p class='text-zinc-300'>
+          Comprehensive TypeScript implementation ensuring robust code quality and preventing common
+          runtime errors.
+        </p>
+      </section>
+    </article>
+  </main>
+</BaseLayout>
