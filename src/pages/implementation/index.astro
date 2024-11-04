@@ -1,0 +1,84 @@
+---
+// src/pages/implementation/index.astro
+import { ViewTransitions } from 'astro:transitions'
+import BaseLayout from '~/layouts/BaseLayout.astro'
+import { prisma } from '~/lib/prisma'
+
+// Fetch existing cells with their details
+const cells = await prisma.cell.findMany({
+  include: {
+    aisles: {
+      include: {
+        bays: true,
+        locations: true
+      }
+    },
+    _count: {
+      select: {
+        aisles: true
+      }
+    }
+  },
+  orderBy: {
+    number: 'asc'
+  }
+})
+---
+
+<BaseLayout title='Warehouse Implementation'>
+  <ViewTransitions />
+
+  <main class='container mx-auto px-4 py-8'>
+    <div class='mx-auto max-w-4xl'>
+      <div class='mb-8 flex items-center justify-between'>
+        <h1 class='text-3xl font-bold'>Warehouse Implementation</h1>
+        <a
+          href='/implementation/new-cell'
+          class='rounded-lg bg-blue-700 px-4 py-2 font-semibold hover:bg-blue-600'
+        >
+          Create New Cell
+        </a>
+      </div>
+
+      {
+        cells.length === 0 ? (
+          <div class='rounded-lg border border-zinc-700 p-8 text-center'>
+            <p class='text-lg text-zinc-300'>No cells implemented yet.</p>
+            <p class='mt-2 text-zinc-400'>
+              Create your first cell to start implementing the warehouse.
+            </p>
+          </div>
+        ) : (
+          <div class='grid gap-4'>
+            {cells.map(cell => (
+              <div class='rounded-lg border border-zinc-700 p-6'>
+                <div class='flex items-center justify-between'>
+                  <h2 class='text-xl font-bold'>Cell {cell.number}</h2>
+                  <span class='rounded-full bg-zinc-700 px-3 py-1 text-sm'>
+                    {cell.aisles.length} aisles
+                  </span>
+                </div>
+                <div class='mt-4 grid grid-cols-2 gap-4 text-sm md:grid-cols-3'>
+                  <div>
+                    <span class='text-zinc-400'>Locations per Aisle:</span>
+                    <p class='font-mono'>{cell.locationsPerAisle * 2}</p>
+                  </div>
+                  <div>
+                    <span class='text-zinc-400'>Levels per Location:</span>
+                    <p class='font-mono'>{cell.levelsPerLocation}</p>
+                  </div>
+                  <div>
+                    <span class='text-zinc-400'>Total Locations:</span>
+                    <p class='font-mono'>
+                      {cell.locationsPerAisle * cell._count.aisles * cell.levelsPerLocation}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </main>
+</BaseLayout>
