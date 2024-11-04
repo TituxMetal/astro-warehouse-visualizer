@@ -32,3 +32,96 @@ model UserAuth {
 
   @@index([userId])
 }
+
+model Cell {
+  id                Int @id @default(autoincrement())
+  number            Int @unique
+  aislesCount       Int
+  locationsPerAisle Int
+  levelsPerLocation Int
+
+  aisles Aisle[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Aisle {
+  id     Int     @id @default(autoincrement())
+  number Int
+  isOdd  Boolean @default(true)
+
+  cell      Cell       @relation(fields: [cellId], references: [id], onDelete: Cascade)
+  cellId    Int
+  locations Location[]
+  obstacles Obstacle[]
+  bays      Bay[] // This becomes a reference from Bay, not ownership
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([cellId, number, isOdd])
+}
+
+model Bay {
+  id     Int @id @default(autoincrement())
+  number Int // Bay number within the aisle
+  width  Int // Number of locations in this bay (3 or 4)
+
+  aisle     Aisle      @relation(fields: [aisleId], references: [id], onDelete: Cascade)
+  aisleId   Int
+  locations Location[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([aisleId, number])
+}
+
+model Location {
+  id        Int     @id @default(autoincrement())
+  position  Int
+  level     Int
+  isPicking Boolean @default(false)
+  status    String  @default("AVAILABLE")
+
+  aisle         Aisle        @relation(fields: [aisleId], references: [id], onDelete: Cascade)
+  aisleId       Int
+  bay           Bay          @relation(fields: [bayId], references: [id], onDelete: Cascade)
+  bayId         Int
+  blockReason   BlockReason? @relation(fields: [blockReasonId], references: [id], onDelete: SetNull)
+  blockReasonId Int?
+  obstacles     Obstacle[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([bayId, position, level])
+}
+
+model BlockReason {
+  id          Int     @id @default(autoincrement())
+  code        String  @unique
+  name        String
+  description String?
+  permanent   Boolean @default(false)
+
+  locations Location[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Obstacle {
+  id          Int     @id @default(autoincrement())
+  type        String
+  name        String
+  description String?
+
+  aisle     Aisle      @relation(fields: [aisleId], references: [id], onDelete: Cascade)
+  aisleId   Int
+  locations Location[] // Many-to-many relation
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
