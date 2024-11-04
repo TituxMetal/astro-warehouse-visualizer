@@ -1,4 +1,23 @@
 // src/types/warehouse.ts
+
+export type LocationType = 'odd' | 'even' | 'both'
+
+export interface AisleConfig {
+  number: number
+  locations: 'odd' | 'even' | 'both'
+}
+
+export interface LocationsRange {
+  count: number
+  start: number
+  end: number
+}
+
+export interface LocationsSummary {
+  odd: LocationsRange
+  even: LocationsRange
+}
+
 /**
  * Configuration for a warehouse cell
  * @property cell - The cell number
