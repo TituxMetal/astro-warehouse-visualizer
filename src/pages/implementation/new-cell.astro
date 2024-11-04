@@ -1,0 +1,17 @@
+---
+// src/pages/implementation/new-cell.astro
+import { ViewTransitions } from 'astro:transitions'
+import { CellForm } from '~/components/CellForm'
+import BaseLayout from '~/layouts/BaseLayout.astro'
+---
+
+<BaseLayout title='Create New Cell'>
+  <ViewTransitions />
+
+  <main class='container mx-auto px-4 py-8'>
+    <h1 class='text-3xl font-bold'>Create New Cell</h1>
+    <p class='mt-2 text-zinc-300'>Enter the cell configuration details below.</p>
+
+    <CellForm client:load />
+  </main>
+</BaseLayout>
