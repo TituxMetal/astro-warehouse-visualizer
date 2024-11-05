@@ -1,5 +1,6 @@
 // src/components/CellForm.tsx
 import React, { useEffect, useState } from 'react'
+import type { AisleConfig } from '~/types/warehouse'
 import {
   calculateLocationRanges,
   generateAisleNumbers,
@@ -48,13 +49,9 @@ export const CellForm: React.FC = () => {
       config.endLocationType
     )
 
-    const locationRanges = calculateLocationRanges(
-      config.locationsPerAisle,
-      config.startLocationType,
-      config.endLocationType
-    )
+    const locationRanges = calculateLocationRanges(config.locationsPerAisle)
 
-    const levels = generateLevels(config.levelCount, config.hasPicking)
+    const levels = generateLevels(config.levelCount)
 
     // Calculate total locations
     const totalLocations = aisles.reduce((total, aisle) => {
@@ -65,34 +62,47 @@ export const CellForm: React.FC = () => {
       return total + locationCount * levels.length
     }, 0)
 
-    const firstAisle = config.aisleStart.toString().padStart(3, '0')
-    const intermediateAisles = aisles.slice(1, -1)
-    const lastAisle = config.aisleEnd.toString().padStart(3, '0')
+    const formatAisleSummary = (aisles: AisleConfig[]): string => {
+      const formatAisleNumber = (num: number) => num.toString().padStart(3, '0')
 
-    const summaryText = `
-Cell ${config.cellNumber}:
+      const summaryParts = {
+        single: (aisle: AisleConfig) =>
+          `Aisle ${formatAisleNumber(aisle.number)}: ${aisle.locations} locations`,
 
-Aisles Configuration:
-Aisle ${firstAisle}: ${aisles[0].locations} locations
-Aisles from ${intermediateAisles[0].number.toString().padStart(3, '0')} to ${intermediateAisles[
-      intermediateAisles.length - 1
-    ].number
-      .toString()
-      .padStart(3, '0')}: ${
-      intermediateAisles.every(aisle => aisle.locations !== 'odd' && aisle.locations !== 'even') &&
-      'both locations'
+        range: (start: AisleConfig, end: AisleConfig) =>
+          `Aisles from ${formatAisleNumber(start.number)} to ${formatAisleNumber(end.number)}: both locations`,
+
+        bookend: (aisle: AisleConfig) =>
+          `Aisle ${formatAisleNumber(aisle.number)}: ${aisle.locations} locations`
+      }
+
+      const [first, ...middle] = aisles
+      const last = middle.pop()
+
+      return [
+        summaryParts.bookend(first),
+        middle.length > 0 && summaryParts.range(middle[0], middle[middle.length - 1]),
+        last && summaryParts.bookend(last)
+      ]
+        .filter(Boolean)
+        .join('\n')
     }
-Aisle ${lastAisle}: ${aisles[aisles.length - 1].locations} locations
+    let summaryText = `Cell ${config.cellNumber}:\n\nAisles Configuration:\n${formatAisleSummary(aisles)}\n`
 
-
-Locations Configuration:
-- Odd locations: ${locationRanges.odd.count} (from ${locationRanges.odd.start} to ${locationRanges.odd.end})
-- Even locations: ${locationRanges.even.count} (from ${locationRanges.even.start} to ${locationRanges.even.end})
-
-Levels: ${levels.map(l => l.toString().padStart(2, '0')).join(', ')}
-
-Total Locations: ${totalLocations}
-    `
+    summaryText += `\nLocations Configuration:
+  - Odd locations: ${locationRanges.odd.count} (from ${locationRanges.odd.start} to ${locationRanges.odd.end})
+  - Even locations: ${locationRanges.even.count} (from ${locationRanges.even.start} to ${locationRanges.even.end})
+  
+  Levels: ${levels
+    .map(l => ({
+      level: l.toString().padStart(2, '0'),
+      isPicking: config.hasPicking && l === 0
+    }))
+    .map(({ level, isPicking }) => `${level}${isPicking ? ' (picking)' : ''}`)
+    .join(', ')}
+  
+  Total Locations: ${totalLocations}
+  `
 
     setSummary(summaryText)
   }, [config])
