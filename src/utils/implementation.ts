@@ -26,11 +26,7 @@ export const generateAisleNumbers = (
   return aisles
 }
 
-export const calculateLocationRanges = (
-  locationsPerAisle: number,
-  startLocationType: LocationType,
-  endLocationType: LocationType
-): LocationsSummary => {
+export const calculateLocationRanges = (locationsPerAisle: number): LocationsSummary => {
   const oddRange: LocationsRange = {
     count: Math.ceil(locationsPerAisle / 2),
     start: 1,
@@ -43,16 +39,6 @@ export const calculateLocationRanges = (
     end: locationsPerAisle
   }
 
-  // Adjust based on start/end location types
-  if (startLocationType === 'even') {
-    oddRange.count--
-    oddRange.start += 2
-  }
-  if (endLocationType === 'even') {
-    oddRange.count--
-    oddRange.end -= 2
-  }
-
   return { odd: oddRange, even: evenRange }
 }
 
@@ -60,8 +46,6 @@ export const generateLocations = (count: number): number[] => {
   return Array.from({ length: count }, (_, i) => i + 1)
 }
 
-export const generateLevels = (count: number, hasPicking: boolean): number[] => {
-  return hasPicking
-    ? [0, ...Array.from({ length: count - 1 }, (_, i) => (i + 1) * 10)]
-    : Array.from({ length: count }, (_, i) => (i + 1) * 10)
+export const generateLevels = (count: number): number[] => {
+  return [0, ...Array.from({ length: count - 1 }, (_, i) => (i + 1) * 10)]
 }
