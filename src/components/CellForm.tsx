@@ -1,39 +1,33 @@
 // src/components/CellForm.tsx
-import React, { useEffect, useState } from 'react'
-import type { AisleConfig } from '~/types/warehouse'
+import { actions } from 'astro:actions'
+import { navigate } from 'astro:transitions/client'
+import React, { useCallback, useMemo, useState } from 'react'
+import type { CellConfigForm } from '~/schemas/implementation.schema'
 import {
   calculateLocationRanges,
   generateAisleNumbers,
   generateLevels
 } from '~/utils/implementation'
+import {
+  calculateTotalLocations,
+  generateAisleSummary,
+  generateLevelsSummary
+} from '~/utils/summaryGenerators'
 import { Button } from './ui/Button'
 import { Input } from './ui/Input'
 import { Select } from './ui/Select'
 
-interface CellConfig {
-  cellNumber: number
-  aisleStart: number
-  aisleEnd: number
-  startLocationType: 'even' | 'odd' | 'both' // For first aisle
-  endLocationType: 'even' | 'odd' | 'both' // For last aisle
-  locationsPerAisle: number
-  levelCount: number
-  hasPicking: boolean
-}
-
 export const CellForm: React.FC = () => {
-  const [config, setConfig] = useState<CellConfig>({
+  const [config, setConfig] = useState<CellConfigForm>({
     cellNumber: 1,
-    aisleStart: 3,
-    aisleEnd: 16,
+    aisleStart: 1,
+    aisleEnd: 4,
     startLocationType: 'even',
-    endLocationType: 'even',
-    locationsPerAisle: 138,
-    levelCount: 5,
+    endLocationType: 'odd',
+    locationsPerAisle: 80,
+    levelCount: 3,
     hasPicking: true
   })
-
-  const [summary, setSummary] = useState<string>('')
 
   const locationTypeOptions = [
     { value: 'both', label: 'Both Even and Odd' },
@@ -41,7 +35,7 @@ export const CellForm: React.FC = () => {
     { value: 'odd', label: 'Odd Only' }
   ]
 
-  useEffect(() => {
+  const summary = useMemo(() => {
     const aisles = generateAisleNumbers(
       config.aisleStart,
       config.aisleEnd,
@@ -50,81 +44,55 @@ export const CellForm: React.FC = () => {
     )
 
     const locationRanges = calculateLocationRanges(config.locationsPerAisle)
-
     const levels = generateLevels(config.levelCount)
+    const totalLocations = calculateTotalLocations(aisles, config.locationsPerAisle, levels.length)
 
-    // Calculate total locations
-    const totalLocations = aisles.reduce((total, aisle) => {
-      const locationCount =
-        aisle.locations === 'both'
-          ? config.locationsPerAisle
-          : Math.ceil(config.locationsPerAisle / 2)
-      return total + locationCount * levels.length
-    }, 0)
+    return `Cell ${config.cellNumber}:
 
-    const formatAisleSummary = (aisles: AisleConfig[]): string => {
-      const formatAisleNumber = (num: number) => num.toString().padStart(3, '0')
+Aisles Configuration:
+${generateAisleSummary(aisles)}
 
-      const summaryParts = {
-        single: (aisle: AisleConfig) =>
-          `Aisle ${formatAisleNumber(aisle.number)}: ${aisle.locations} locations`,
+Locations Configuration:
+- Odd locations: ${locationRanges.odd.count} (from ${locationRanges.odd.start} to ${locationRanges.odd.end})
+- Even locations: ${locationRanges.even.count} (from ${locationRanges.even.start} to ${locationRanges.even.end})
 
-        range: (start: AisleConfig, end: AisleConfig) =>
-          `Aisles from ${formatAisleNumber(start.number)} to ${formatAisleNumber(end.number)}: both locations`,
+Levels: ${generateLevelsSummary(levels, config.hasPicking)}
 
-        bookend: (aisle: AisleConfig) =>
-          `Aisle ${formatAisleNumber(aisle.number)}: ${aisle.locations} locations`
-      }
-
-      const [first, ...middle] = aisles
-      const last = middle.pop()
-
-      return [
-        summaryParts.bookend(first),
-        middle.length > 0 && summaryParts.range(middle[0], middle[middle.length - 1]),
-        last && summaryParts.bookend(last)
-      ]
-        .filter(Boolean)
-        .join('\n')
-    }
-    let summaryText = `Cell ${config.cellNumber}:\n\nAisles Configuration:\n${formatAisleSummary(aisles)}\n`
-
-    summaryText += `\nLocations Configuration:
-  - Odd locations: ${locationRanges.odd.count} (from ${locationRanges.odd.start} to ${locationRanges.odd.end})
-  - Even locations: ${locationRanges.even.count} (from ${locationRanges.even.start} to ${locationRanges.even.end})
-  
-  Levels: ${levels
-    .map(l => ({
-      level: l.toString().padStart(2, '0'),
-      isPicking: config.hasPicking && l === 0
-    }))
-    .map(({ level, isPicking }) => `${level}${isPicking ? ' (picking)' : ''}`)
-    .join(', ')}
-  
-  Total Locations: ${totalLocations}
-  `
-
-    setSummary(summaryText)
+Total Locations: ${totalLocations}
+`
   }, [config])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target
-    console.log('name', name, typeof name)
-    console.log('value', value, typeof value)
-    console.log('type', type, typeof type)
-    const checked = type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined
-    const numberValue = type === 'number' ? parseInt(value, 10) : value
-    setConfig(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : numberValue
-    }))
-  }
+  const handleInputChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const { name, value, type } = e.target
+      setConfig(prev => ({
+        ...prev,
+        [name]:
+          type === 'checkbox'
+            ? (e.target as HTMLInputElement).checked
+            : type === 'number'
+              ? parseInt(value, 10)
+              : value
+      }))
+    },
+    []
+  )
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    // Here you would call your action to create the cell
-    console.log('Submitting cell config:', config)
-  }
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent) => {
+      e.preventDefault()
+      try {
+        const input = new FormData(e.target as HTMLFormElement)
+        const { error } = await actions.createCell(input)
+        if (!error) {
+          navigate('/implementation')
+        }
+      } catch (error) {
+        console.error('Failed to create cell:', error)
+      }
+    },
+    [config]
+  )
 
   return (
     <form
