@@ -61,7 +61,7 @@ const cells = await prisma.cell.findMany({
                 <div class='mt-4 grid grid-cols-2 gap-4 text-sm md:grid-cols-3'>
                   <div>
                     <span class='text-zinc-400'>Locations per Aisle:</span>
-                    <p class='font-mono'>{cell.locationsPerAisle * 2}</p>
+                    <p class='font-mono'>{cell.locationsPerAisle}</p>
                   </div>
                   <div>
                     <span class='text-zinc-400'>Levels per Location:</span>
