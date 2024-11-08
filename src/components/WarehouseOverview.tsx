@@ -1,34 +1,38 @@
 // src/components/WarehouseOverview.tsx
-import { WAREHOUSE_CONFIG } from '~/types/warehouse'
+import type { Cell } from '@prisma/client'
 
-export const WarehouseOverview = () => {
+interface WarehouseOverviewProps {
+  cells: (Cell & { _count: { aisles: number } })[]
+}
+
+export const WarehouseOverview: React.FC<WarehouseOverviewProps> = ({ cells }) => {
   return (
     <div className='flex flex-col gap-6'>
       <h1 className='text-3xl font-bold'>Warehouse Overview</h1>
 
       <div className='grid grid-cols-2 gap-4'>
-        {WAREHOUSE_CONFIG.map(config => (
+        {cells.map(cell => (
           <a
-            key={`cell-${config.cell}`}
-            href={`/warehouse/cell/${config.cell}`}
+            key={`cell-${cell.number}`}
+            href={`/warehouse/cell/${cell.number}`}
             className='rounded-lg border-2 p-6 transition-colors hover:border-zinc-300 hover:bg-blue-700'
           >
             <div className='flex flex-col gap-4'>
-              <h2 className='text-2xl font-bold'>Cell {config.cell}</h2>
+              <h2 className='text-2xl font-bold'>Cell {cell.number}</h2>
               <div className='grid grid-cols-2 gap-4 text-sm text-zinc-200'>
                 <div>
-                  <span className='font-semibold'>Aisles:</span> {config.aislesCount}
+                  <span className='font-semibold'>Aisles:</span> {cell._count.aisles}
                 </div>
                 <div>
                   <span className='font-semibold'>Locations per Aisle:</span>{' '}
-                  {config.locationsPerAisle}
+                  {cell.locationsPerAisle}
                 </div>
                 <div>
-                  <span className='font-semibold'>Levels:</span> {config.levelsPerLocation}
+                  <span className='font-semibold'>Levels:</span> {cell.levelsPerLocation}
                 </div>
                 <div>
                   <span className='font-semibold'>Total Locations:</span>{' '}
-                  {config.aislesCount * config.locationsPerAisle * config.levelsPerLocation}
+                  {cell._count.aisles * cell.locationsPerAisle * cell.levelsPerLocation}
                 </div>
               </div>
             </div>
@@ -41,29 +45,26 @@ export const WarehouseOverview = () => {
         <div className='grid grid-cols-2 gap-4 md:grid-cols-4'>
           <div className='rounded-lg bg-zinc-700 p-4 shadow'>
             <div className='text-sm text-zinc-200'>Total Cells</div>
-            <div className='text-2xl font-bold'>{WAREHOUSE_CONFIG.length}</div>
+            <div className='text-2xl font-bold'>{cells.length}</div>
           </div>
           <div className='rounded-lg bg-zinc-700 p-4 shadow'>
             <div className='text-sm text-zinc-200'>Total Aisles</div>
             <div className='text-2xl font-bold'>
-              {WAREHOUSE_CONFIG.reduce((acc, config) => acc + config.aislesCount, 0)}
+              {cells.reduce((acc, cell) => acc + cell._count.aisles, 0)}
             </div>
           </div>
           <div className='rounded-lg bg-zinc-700 p-4 shadow'>
             <div className='text-sm text-zinc-200'>Locations per Cell</div>
             <div className='text-2xl font-bold'>
-              {WAREHOUSE_CONFIG.reduce(
-                (acc, config) => acc + config.aislesCount * config.locationsPerAisle,
-                0
-              )}
+              {cells.reduce((acc, cell) => acc + cell._count.aisles * cell.locationsPerAisle, 0)}
             </div>
           </div>
           <div className='rounded-lg bg-zinc-700 p-4 shadow'>
             <div className='text-sm text-zinc-200'>Total Warehouse Locations</div>
             <div className='text-2xl font-bold'>
-              {WAREHOUSE_CONFIG.reduce(
-                (acc, config) =>
-                  acc + config.aislesCount * config.locationsPerAisle * config.levelsPerLocation,
+              {cells.reduce(
+                (acc, cell) =>
+                  acc + cell._count.aisles * cell.locationsPerAisle * cell.levelsPerLocation,
                 0
               )}
             </div>
