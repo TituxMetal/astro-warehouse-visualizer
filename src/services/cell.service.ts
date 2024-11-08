@@ -66,5 +66,20 @@ export const cellService = {
         }
       }
     })
+  },
+  async getCellWithAisles(cellNumber: number) {
+    return await prisma.cell.findUnique({
+      where: { number: cellNumber },
+      include: {
+        aisles: {
+          orderBy: [{ number: 'asc' }, { isOdd: 'asc' }]
+        },
+        _count: {
+          select: {
+            aisles: true
+          }
+        }
+      }
+    })
   }
 }
