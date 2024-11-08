@@ -1,10 +1,9 @@
 // src/actions/cell.ts
-import type { Prisma } from '@prisma/client'
 import { ActionError, defineAction } from 'astro:actions'
 import { prisma } from '~/lib/prisma'
 import { implementationSchema } from '~/schemas/implementation.schema'
-import { createLocationsInBatches } from '~/services/createLocationsInBatches'
-import { generateAisleNumbers, generateLevels } from '~/utils/implementation'
+import { cellService } from '~/services/cell.service'
+import { generateAisleNumbers } from '~/utils/implementation'
 
 export const cell = {
   create: defineAction({
@@ -30,7 +29,7 @@ export const cell = {
           }
         })
 
-        // Create aisle records based on configuration
+        // Create aisle records
         const aislesData = aisles.flatMap(aisle => {
           switch (aisle.locations) {
             case 'both':
@@ -45,61 +44,19 @@ export const cell = {
           }
         })
 
-        const createdAisles = await prisma.$transaction(
-          aislesData.map(data => prisma.aisle.create({ data }))
-        )
-
-        // Calculate bays per aisle side
-        const baysPerSide = Math.ceil(input.locationsPerAisle / 4)
+        const createdAisles = await cellService.createAisles(aislesData)
 
         // Create bays
-        const baysData: Prisma.BayCreateManyInput[] = createdAisles.flatMap(aisle =>
-          Array.from({ length: baysPerSide }, (_, i) => ({
-            number: i + 1,
-            width: 4,
-            aisleId: aisle.id
-          }))
-        )
+        const baysPerSide = Math.ceil(input.locationsPerAisle / 4)
+        const baysData = await cellService.createBays(createdAisles, baysPerSide)
 
-        await prisma.bay.createMany({ data: baysData })
-
-        // Get created bays for reference
+        // Get created bays
         const bays = await prisma.bay.findMany({
           orderBy: [{ aisleId: 'asc' }, { number: 'asc' }]
         })
 
-        // Generate levels
-        const levels = generateLevels(input.levelCount)
-
-        // Prepare locations data
-        const allLocations: Prisma.LocationCreateManyInput[] = []
-
-        createdAisles.forEach(aisle => {
-          const aisleBays = bays.filter(bay => bay.aisleId === aisle.id)
-
-          aisleBays.forEach((bay, bayIndex) => {
-            const locationsInBay = Math.min(4, input.locationsPerAisle / 2 - bayIndex * 4)
-
-            for (let i = 0; i < locationsInBay; i++) {
-              const basePosition = bayIndex * 4 + i
-              const position = aisle.isOdd ? basePosition * 2 + 1 : (basePosition + 1) * 2
-
-              // Create locations for all levels
-              levels.forEach(level => {
-                allLocations.push({
-                  position,
-                  level,
-                  isPicking: input.hasPicking && level === 0,
-                  aisleId: aisle.id,
-                  bayId: bay.id
-                })
-              })
-            }
-          })
-        })
-
-        // Create all locations
-        await createLocationsInBatches(allLocations)
+        // Create locations
+        const allLocations = await cellService.createLocations(createdAisles, bays, input)
 
         console.log(
           `Cell created successfully with ${createdAisles.length} aisles, ${baysData.length} bays, and ${allLocations.length} locations`
