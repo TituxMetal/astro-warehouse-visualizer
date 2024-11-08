@@ -4,23 +4,24 @@ import { ViewTransitions } from 'astro:transitions'
 import { Breadcrumb } from '~/components/Breadcrumb'
 import { CellVisualization } from '~/components/CellVisualization'
 import BaseLayout from '~/layouts/BaseLayout.astro'
-import { getCellConfig } from '~/utils/warehouse'
+import { cellService } from '~/services/cell.service'
 
 export const prerender = false
 
 const { cell } = Astro.params
-const cellNumber = parseInt(cell || '1')
+const cellNumber = parseInt(cell!)
 
-if (!getCellConfig(cellNumber)) {
+const cellData = await cellService.getCellWithAisles(cellNumber)
+if (!cellData) {
   return Astro.redirect('/warehouse')
 }
 ---
 
-<BaseLayout title={`Cell ${cellNumber} Overview`}>
+<BaseLayout title={`Cell ${cellNumber} - Warehouse Overview`}>
   <ViewTransitions />
 
   <main class='container mx-auto px-4 py-8'>
     <Breadcrumb cell={cellNumber} showLocation client:load />
-    <CellVisualization cell={cellNumber} client:load />
+    <CellVisualization cell={cellData} client:load />
   </main>
 </BaseLayout>
