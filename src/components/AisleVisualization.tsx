@@ -1,19 +1,35 @@
 // src/components/AisleVisualization.tsx
+import type { Aisle, Cell, Location } from '@prisma/client'
 import { useState } from 'react'
-import { getCellConfig, getValidLevels } from '~/utils/warehouse'
 
 interface Props {
-  cell: number
-  aisle: number
+  aisles: (Aisle & {
+    cell: Cell
+    locations: Location[]
+    _count: {
+      locations: number
+    }
+  })[]
 }
 
-export const AisleVisualization = ({ cell, aisle }: Props) => {
+export const AisleVisualization = ({ aisles }: Props) => {
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null)
-  const config = getCellConfig(cell)
-  if (!config) return null
 
-  const validLevels = getValidLevels(config.levelsPerLocation)
-  const formattedAisle = aisle.toString().padStart(3, '0')
+  // Early return if no aisles
+  if (!aisles.length) return null
+
+  const [oddAisle, evenAisle] = aisles
+  const cell = oddAisle.cell
+  const formattedAisle = oddAisle.number.toString().padStart(3, '0')
+
+  // Get unique positions and levels
+  const positions = Array.from(
+    new Set(aisles.flatMap(aisle => aisle.locations.map(loc => loc.position)))
+  ).sort((a, b) => a - b)
+
+  const levels = Array.from(
+    new Set(aisles.flatMap(aisle => aisle.locations.map(loc => loc.level)))
+  ).sort((a, b) => a - b)
 
   const handlePositionClick = (position: number) => {
     setSelectedPosition(selectedPosition === position ? null : position)
@@ -29,12 +45,11 @@ export const AisleVisualization = ({ cell, aisle }: Props) => {
   return (
     <div className='flex flex-col gap-4'>
       <h2 className='text-2xl font-bold'>
-        Cell {cell} - Aisle {formattedAisle}
+        Cell {cell.number} - Aisle {formattedAisle}
       </h2>
 
       <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-        {Array.from({ length: config.locationsPerAisle }).map((_, index) => {
-          const position = index + 1
+        {positions.map(position => {
           const formattedPosition = position.toString().padStart(4, '0')
           const isSelected = selectedPosition === position
 
@@ -59,20 +74,22 @@ export const AisleVisualization = ({ cell, aisle }: Props) => {
                   role='group'
                   aria-label={`Levels for position ${formattedPosition}`}
                 >
-                  {validLevels.map(level => {
+                  {levels.map(level => {
                     const formattedLevel = level.toString().padStart(2, '0')
                     const location = `${formattedPosition}-${formattedLevel}`
+                    const isPicking = level === 0
+
                     return (
                       <a
                         key={`level-${formattedLevel}`}
-                        href={`/warehouse/cell/${cell}/aisle/${aisle}/${location}`}
+                        href={`/warehouse/cell/${cell.number}/aisle/${oddAisle.number}/${location}`}
                         className={`flex items-center justify-center rounded border p-2 text-sm transition-colors ${
-                          level === 0
+                          isPicking
                             ? 'border-amber-400 bg-amber-900 text-amber-200 hover:bg-amber-800'
                             : 'border-zinc-600 hover:border-green-600 hover:bg-green-700'
                         }`}
                         onClick={e => e.stopPropagation()}
-                        aria-label={`${level === 0 ? 'Picking level' : `Level ${level}`} of position ${formattedPosition}`}
+                        aria-label={`${isPicking ? 'Picking level' : `Level ${level}`} of position ${formattedPosition}`}
                         role='link'
                       >
                         {formattedLevel}
@@ -95,16 +112,16 @@ export const AisleVisualization = ({ cell, aisle }: Props) => {
         <div className='grid grid-cols-2 gap-4 md:grid-cols-3'>
           <div className='rounded-lg bg-zinc-700 p-4'>
             <div className='text-sm text-zinc-300'>Positions</div>
-            <div className='text-2xl font-bold'>{config.locationsPerAisle}</div>
+            <div className='text-2xl font-bold'>{positions.length}</div>
           </div>
           <div className='rounded-lg bg-zinc-700 p-4'>
             <div className='text-sm text-zinc-300'>Levels per Position</div>
-            <div className='text-2xl font-bold'>{config.levelsPerLocation}</div>
+            <div className='text-2xl font-bold'>{levels.length}</div>
           </div>
           <div className='rounded-lg bg-zinc-700 p-4'>
             <div className='text-sm text-zinc-300'>Total Locations</div>
             <div className='text-2xl font-bold'>
-              {config.locationsPerAisle * config.levelsPerLocation}
+              {aisles.reduce((total, aisle) => total + aisle._count.locations, 0)}
             </div>
           </div>
         </div>
