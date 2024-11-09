@@ -1,13 +1,5 @@
 // src/utils/warehouse.ts
-import {
-  type CellConfig,
-  FORMAT_LENGTHS,
-  type FullLocation,
-  LEVEL_CONSTRAINTS,
-  type Location,
-  REGEX_PATTERNS,
-  WAREHOUSE_CONFIG
-} from '~/types/warehouse'
+import { FORMAT_LENGTHS, type FullLocation, type Location, REGEX_PATTERNS } from '~/types/warehouse'
 
 /**
  * Custom error types for better error handling
@@ -15,64 +7,16 @@ import {
 export class WarehouseError extends Error {
   constructor(
     message: string,
-    public code: 'INVALID_LEVEL' | 'INVALID_FORMAT' | 'CELL_NOT_FOUND'
+    public code:
+      | 'INVALID_LEVEL'
+      | 'INVALID_FORMAT'
+      | 'CELL_NOT_FOUND'
+      | 'INVALID_AISLE'
+      | 'INVALID_POSITION'
   ) {
     super(message)
     this.name = 'WarehouseError'
   }
-}
-
-/**
- * Type guard for Location interface
- */
-export const isLocation = (value: unknown): value is Location => {
-  return (
-    typeof value === 'object' &&
-    value !== null &&
-    'position' in value &&
-    'level' in value &&
-    typeof (value as Location).position === 'number' &&
-    typeof (value as Location).level === 'number'
-  )
-}
-
-/**
- * Type guard for FullLocation interface
- */
-export const isFullLocation = (value: unknown): value is FullLocation => {
-  return (
-    isLocation(value) &&
-    'cell' in value &&
-    'aisle' in value &&
-    typeof (value as FullLocation).cell === 'number' &&
-    typeof (value as FullLocation).aisle === 'number'
-  )
-}
-
-/**
- * Gets the configuration for a specific cell
- * @throws {WarehouseError} When cell is not found
- */
-export const getCellConfig = (cellNumber: number): CellConfig => {
-  const config = WAREHOUSE_CONFIG.find(config => config.cell === cellNumber)
-  if (!config) {
-    throw new WarehouseError(`Cell ${cellNumber} not found`, 'CELL_NOT_FOUND')
-  }
-  return config
-}
-
-/**
- * Generates valid levels for a given number of levels
- * @returns Array of valid level numbers
- */
-export const getValidLevels = (levelsCount: number): readonly number[] => {
-  // Start with picking level
-  const levels = [LEVEL_CONSTRAINTS.PICKING]
-  // Add storage levels
-  for (let i = 0; i < levelsCount; i++) {
-    levels.push(((i + 1) * LEVEL_CONSTRAINTS.STEP) as 0)
-  }
-  return levels
 }
 
 /**
@@ -104,7 +48,7 @@ export const normalizeLocation = (location: string): string => {
  * Function to normalize an address
  * @param address The full address string to normalize
  */
-export const normalizeAddress = (address: string): string => {
+const normalizeAddress = (address: string): string => {
   const parts = address.split('-')
   if (parts.length !== 4) return address
 
@@ -122,34 +66,28 @@ export const normalizeAddress = (address: string): string => {
  * @param address The full address string to parse
  * @returns FullLocation object or null if invalid
  */
-export const parseFullAddress = (address: string): FullLocation | null => {
-  try {
-    const normalized = normalizeAddress(address)
-    const match = normalized.match(REGEX_PATTERNS.FULL_ADDRESS)
-    if (!match) return null
-
-    const [_, cellStr, aisleStr, positionStr, levelStr] = match
-    const cell = parseInt(cellStr)
-    const aisle = parseInt(aisleStr)
-    const position = parseInt(positionStr)
-    const level = parseInt(levelStr)
-
-    // Validate cell exists
-    const cellConfig = getCellConfig(cell)
-
-    // Validate aisle is within range
-    if (aisle <= 0 || aisle > cellConfig.aislesCount) return null
-
-    // Validate position is within range
-    if (position <= 0 || position > cellConfig.locationsPerAisle) return null
-
-    // Validate level
-    if (!isValidLevel(level)) return null
-
-    return { cell, aisle, position, level }
-  } catch {
-    return null
+export const parseFullAddress = (address: string): FullLocation => {
+  const normalized = normalizeAddress(address)
+  const match = normalized.match(REGEX_PATTERNS.FULL_ADDRESS)
+  if (!match) {
+    throw new WarehouseError(
+      'Invalid address format. Expected format: cell-aisle-position-level',
+      'INVALID_FORMAT'
+    )
   }
+
+  const [, cellStr, aisleStr, positionStr, levelStr] = match
+  const cell = parseInt(cellStr)
+  const aisle = parseInt(aisleStr)
+  const position = parseInt(positionStr)
+  const level = parseInt(levelStr)
+
+  // Validate level
+  if (!isValidLevel(level)) {
+    throw new WarehouseError('Invalid level. Levels must be 0, 10, 20, 30, or 40', 'INVALID_LEVEL')
+  }
+
+  return { cell, aisle, position, level }
 }
 
 /**
@@ -180,12 +118,8 @@ export const isValidLocation = (location: string): boolean => {
  * @private
  */
 const isValidLevel = (level: number): boolean => {
-  return (
-    level === 0 ||
-    (level % LEVEL_CONSTRAINTS.STEP === 0 &&
-      level >= LEVEL_CONSTRAINTS.STEP &&
-      level <= LEVEL_CONSTRAINTS.MAX)
-  )
+  const validLevels = [0, 10, 20, 30, 40]
+  return validLevels.includes(level)
 }
 
 /**
@@ -234,28 +168,20 @@ export const validateLocation = (location: string): ValidationResult<string> => 
 }
 
 /**
- * Validates a position number
- * @private
- */
-export const isValidPosition = (position: number, config: CellConfig): boolean => {
-  return position > 0 && position <= config.locationsPerAisle
-}
-
-/**
  * Parses a location string into a Location object
  * @throws {WarehouseError} When location format is invalid
  */
-export const parseLocation = (location: string): Location => {
+export const parseLocation = (location: string): Location | null => {
   const validation = validateLocation(location)
 
   if (!validation.success || !validation.data) {
-    throw new WarehouseError(validation.error || 'Invalid location', 'INVALID_FORMAT')
+    return null
   }
 
   const [position, level] = validation.data.split('-').map(Number)
 
   if (!isValidLevel(level)) {
-    throw new WarehouseError('Invalid level', 'INVALID_FORMAT')
+    return null
   }
 
   return { position, level }
