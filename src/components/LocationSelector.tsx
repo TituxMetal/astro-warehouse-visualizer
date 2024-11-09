@@ -1,4 +1,4 @@
-// src/components/WarehouseSelector.tsx
+// src/components/LocationSelector.tsx
 import { useState } from 'react'
 import { normalizeLocation, parseFullAddress, WarehouseError } from '~/utils/warehouse'
 
@@ -6,7 +6,7 @@ interface Props {
   address: string
 }
 
-export const WarehouseSelector = ({ address }: Props) => {
+export const LocationSelector = ({ address }: Props) => {
   const [inputValue, setInputValue] = useState(address)
   const [error, setError] = useState<string>('')
 
@@ -20,7 +20,7 @@ export const WarehouseSelector = ({ address }: Props) => {
     try {
       const parsedAddress = parseFullAddress(value)
       if (!parsedAddress) {
-        setError('Invalid address format or level. Levels must be 10, 20, 30, or 40')
+        setError('Invalid address format or level.')
         return
       }
 
@@ -56,14 +56,13 @@ export const WarehouseSelector = ({ address }: Props) => {
         onChange={handleAddressChange}
         onKeyUp={handleKeyPress}
         onBlur={handleBlur}
+        aria-describedby='warehouse-selector-help'
         placeholder='Enter location (e.g., 4-016-0026-10)'
         className={`w-full rounded border px-4 py-2 outline-none focus:ring-2 focus:ring-blue-500 ${error ? 'border-red-500' : 'border-zinc-300'}`}
       />
       {error && <div className='text-sm text-red-300'>{error}</div>}
-      <div className='text-sm text-zinc-400'>
+      <div className='text-sm text-zinc-400' id='warehouse-selector-help'>
         Format: cell-aisle-position-level (e.g., 4-016-0026-10)
-        <br />
-        Valid levels: 10, 20, 30, 40
       </div>
     </div>
   )
