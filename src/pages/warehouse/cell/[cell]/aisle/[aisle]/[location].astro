@@ -2,61 +2,56 @@
 // src/pages/warehouse/cell/[cell]/aisle/[aisle]/[location].astro
 import { ViewTransitions } from 'astro:transitions'
 import { Breadcrumb } from '~/components/Breadcrumb'
-import { WarehouseSelector } from '~/components/WarehouseSelector'
-import { WarehouseVisualization } from '~/components/WarehouseVisualization'
+import { LocationSelector } from '~/components/LocationSelector'
+import { LocationVisualization } from '~/components/LocationVisualization'
 import BaseLayout from '~/layouts/BaseLayout.astro'
-import type { FullLocation } from '~/types/warehouse'
-import { formatAddress, getCellConfig, isValidPosition, parseLocation } from '~/utils/warehouse'
+import { locationService } from '~/services/location.service'
+import { formatAddress, parseLocation } from '~/utils/warehouse'
 
 export const prerender = false
 
 const { cell, aisle, location } = Astro.params
+const cellNumber = parseInt(cell || '', 10)
+const aisleNumber = parseInt(aisle || '', 10)
 
-// Validate cell, aisle, and location format
-if (!cell || !aisle || !location) {
+const parsedLocation = parseLocation(location || '')
+
+if (isNaN(cellNumber) || isNaN(aisleNumber) || !parsedLocation) {
   return Astro.redirect('/warehouse')
 }
 
-const cellNumber = parseInt(cell)
-const aisleNumber = parseInt(aisle)
-const cellConfig = getCellConfig(cellNumber)
+const { position, level } = parsedLocation
 
-if (!cellConfig) {
+const cellData = await locationService.getLocationContext(cellNumber, aisleNumber, position, level)
+
+if (!cellData) {
   return Astro.redirect('/warehouse')
 }
 
-// Parse location and validate position
-const parsedLocation = parseLocation(location)
-if (!parsedLocation || !isValidPosition(parsedLocation.position, cellConfig)) {
-  return Astro.redirect('/warehouse')
-}
-
-const fullLocation: FullLocation = {
+const selectedLocation = {
   cell: cellNumber,
   aisle: aisleNumber,
-  ...parsedLocation
+  position,
+  level
 }
 
-const formattedAddress = formatAddress(fullLocation)
+const formattedAddress = formatAddress(selectedLocation)
 ---
 
-<BaseLayout title='Warehouse Visualization'>
+<BaseLayout
+  title={`Cell ${cellNumber}, Aisle ${aisleNumber}, Location ${location} - Warehouse Visualization`}
+>
   <ViewTransitions />
 
   <main class='container mx-auto px-4 py-8'>
-    <Breadcrumb
-      cell={fullLocation.cell}
-      aisle={fullLocation.aisle}
-      showLocation={true}
-      client:load
-    />
+    <Breadcrumb cell={selectedLocation.cell} aisle={selectedLocation.aisle} showLocation={true} />
 
     <h1 class='mb-8 text-3xl font-bold'>Warehouse Location Visualizer</h1>
 
     <div class='mb-6'>
-      <WarehouseSelector client:load address={formattedAddress} />
+      <LocationSelector client:load address={formattedAddress} />
     </div>
 
-    <WarehouseVisualization fullLocation={fullLocation} client:load />
+    <LocationVisualization cell={cellData} selectedLocation={selectedLocation} client:load />
   </main>
 </BaseLayout>
