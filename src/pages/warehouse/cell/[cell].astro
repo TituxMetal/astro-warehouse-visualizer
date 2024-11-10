@@ -8,10 +8,25 @@ import { cellService } from '~/services/cell.service'
 
 export const prerender = false
 
-const { cell } = Astro.params
-const cellNumber = parseInt(cell!)
+const cellNumber = Number(Astro.params.cell)
+const isValidCellNumber = !isNaN(cellNumber) && cellNumber > 0
 
-const cellData = await cellService.getCellWithAisles(cellNumber)
+const getCellData = async () => {
+  if (!isValidCellNumber) {
+    throw new Error('Invalid cell number')
+  }
+
+  const cellData = await cellService.getCellWithAisles(cellNumber)
+
+  if (!cellData) {
+    throw new Error(`Cell ${cellNumber} not found`)
+  }
+
+  return cellData
+}
+
+const cellData = await getCellData().catch(() => null)
+
 if (!cellData) {
   return Astro.redirect('/warehouse')
 }
@@ -22,6 +37,7 @@ if (!cellData) {
 
   <main class='container mx-auto px-4 py-8'>
     <Breadcrumb cell={cellNumber} showLocation client:load />
+
     <CellVisualization cell={cellData} client:load />
   </main>
 </BaseLayout>
