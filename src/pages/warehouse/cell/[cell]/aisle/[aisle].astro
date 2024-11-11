@@ -8,17 +8,40 @@ import { aisleService } from '~/services/aisle.service'
 
 export const prerender = false
 
+// Get URL parameters and validate
 const { cell, aisle } = Astro.params
-const cellNumber = parseInt(cell!)
-const aisleNumber = parseInt(aisle!)
+
+if (!cell || !aisle) {
+  return Astro.redirect('/warehouse')
+}
+
+// Parse numeric values with validation
+const cellNumber = Number(cell)
+const aisleNumber = Number(aisle)
+
+if (isNaN(cellNumber) || isNaN(aisleNumber)) {
+  return Astro.redirect('/warehouse')
+}
+
+// Format aisle number for display
+const formattedAisle = aisleNumber.toString().padStart(3, '0')
 
 const aisles = await aisleService.getAisleWithLocations(cellNumber, aisleNumber)
+
 if (!aisles.length) {
+  return Astro.redirect('/warehouse')
+}
+
+// Destructure needed values for title
+const [evenAisle, oddAisle] = aisles
+const activeCell = oddAisle?.cell || evenAisle?.cell
+
+if (!activeCell) {
   return Astro.redirect('/warehouse')
 }
 ---
 
-<BaseLayout title={`Cell ${cellNumber} - Aisle ${aisleNumber}`}>
+<BaseLayout title={`Cell ${cellNumber} - Aisle ${formattedAisle}`}>
   <ViewTransitions />
 
   <main class='container mx-auto px-4 py-8'>
