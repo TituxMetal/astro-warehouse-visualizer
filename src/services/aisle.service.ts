@@ -12,11 +12,18 @@ export const aisleService = {
       },
       include: {
         cell: true,
-        locations: {
-          orderBy: {
-            position: 'asc'
+        bays: {
+          include: {
+            locations: {
+              orderBy: {
+                position: 'asc'
+              }
+            },
+            aisle: true
           },
-          distinct: ['position', 'level']
+          orderBy: {
+            number: 'asc'
+          }
         },
         _count: {
           select: {
