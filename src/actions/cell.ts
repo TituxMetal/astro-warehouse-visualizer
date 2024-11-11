@@ -47,7 +47,8 @@ export const cell = {
         const createdAisles = await cellService.createAisles(aislesData)
 
         // Create bays
-        const baysPerSide = Math.ceil(input.locationsPerAisle / 4)
+        const realLocationsPerAisle = input.locationsPerAisle / 2
+        const baysPerSide = Math.ceil(realLocationsPerAisle / 4)
         const baysData = await cellService.createBays(createdAisles, baysPerSide)
 
         // Get created bays
