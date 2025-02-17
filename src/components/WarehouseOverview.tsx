@@ -43,23 +43,23 @@ export const WarehouseOverview: React.FC<WarehouseOverviewProps> = ({ cells }) =
       <div className='mt-4 rounded-lg bg-zinc-800 p-4'>
         <h3 className='mb-2 text-lg font-semibold'>Warehouse Statistics</h3>
         <div className='grid grid-cols-2 gap-4 md:grid-cols-4'>
-          <div className='rounded-lg bg-zinc-700 p-4 shadow'>
+          <div className='rounded-lg bg-zinc-700 p-4 shadow-sm'>
             <div className='text-sm text-zinc-200'>Total Cells</div>
             <div className='text-2xl font-bold'>{cells.length}</div>
           </div>
-          <div className='rounded-lg bg-zinc-700 p-4 shadow'>
+          <div className='rounded-lg bg-zinc-700 p-4 shadow-sm'>
             <div className='text-sm text-zinc-200'>Total Aisles</div>
             <div className='text-2xl font-bold'>
               {cells.reduce((acc, cell) => acc + cell._count.aisles, 0)}
             </div>
           </div>
-          <div className='rounded-lg bg-zinc-700 p-4 shadow'>
+          <div className='rounded-lg bg-zinc-700 p-4 shadow-sm'>
             <div className='text-sm text-zinc-200'>Locations per Cell</div>
             <div className='text-2xl font-bold'>
               {cells.reduce((acc, cell) => acc + cell._count.aisles * cell.locationsPerAisle, 0)}
             </div>
           </div>
-          <div className='rounded-lg bg-zinc-700 p-4 shadow'>
+          <div className='rounded-lg bg-zinc-700 p-4 shadow-sm'>
             <div className='text-sm text-zinc-200'>Total Warehouse Locations</div>
             <div className='text-2xl font-bold'>
               {cells.reduce(

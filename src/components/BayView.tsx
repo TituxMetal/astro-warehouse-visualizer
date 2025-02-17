@@ -76,7 +76,7 @@ export const BayView = React.memo<BayViewProps>(
     )
 
     return (
-      <div className='rounded border-2 border-zinc-500'>
+      <div className='rounded-sm border-2 border-zinc-500'>
         <div className='p-2 text-center font-bold'>
           Bay {bay.number.toString().padStart(2, '0')}
         </div>

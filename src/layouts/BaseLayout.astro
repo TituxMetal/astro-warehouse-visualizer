@@ -24,7 +24,7 @@ const formattedUsername = user && user.username?.charAt(0).toUpperCase() + user.
   </head>
   <body class='min-h-screen'>
     <header class='flex items-center justify-between bg-sky-900 p-6 font-semibold text-neutral-100'>
-      <nav class='mx-auto flex w-full max-w-screen-xl gap-4'>
+      <nav class='mx-auto flex w-full max-w-(--breakpoint-xl) gap-4'>
         <ul class='flex w-full items-center gap-4'>
           <li>
             <a href='/'>Home</a>
@@ -59,7 +59,7 @@ const formattedUsername = user && user.username?.charAt(0).toUpperCase() + user.
         </ul>
       </nav>
     </header>
-    <main class='mx-auto flex h-full w-full max-w-screen-xl flex-1 flex-col py-6'>
+    <main class='mx-auto flex h-full w-full max-w-(--breakpoint-xl) flex-1 flex-col py-6'>
       <slot />
     </main>
     <footer class='flex flex-col items-center justify-center gap-2 bg-sky-900 p-6 text-neutral-100'>

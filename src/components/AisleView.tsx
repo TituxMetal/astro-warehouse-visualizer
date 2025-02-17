@@ -8,7 +8,7 @@ interface AisleProps {
 
 export const AisleView: React.FC<AisleProps> = ({ aisles }) => {
   return (
-    <div className='rounded border-2 border-zinc-500' role='region' aria-label='Aisle View'>
+    <div className='rounded-sm border-2 border-zinc-500' role='region' aria-label='Aisle View'>
       <div className='p-2 text-center font-bold'>
         Aisle {aisles[0].number.toString().padStart(3, '0')}
       </div>

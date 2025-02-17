@@ -97,7 +97,7 @@ Total Locations: ${totalLocations}
   return (
     <form
       onSubmit={handleSubmit}
-      className='mx-auto mt-6 grid w-full max-w-screen-lg grid-cols-12 grid-rows-5 gap-4 p-6'
+      className='mx-auto mt-6 grid w-full max-w-(--breakpoint-lg) grid-cols-12 grid-rows-5 gap-4 p-6'
     >
       <div className='col-span-3 col-start-1'>
         <label htmlFor='cellNumber'>Cell Number</label>

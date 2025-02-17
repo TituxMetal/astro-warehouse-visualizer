@@ -58,7 +58,7 @@ export const LocationSelector = ({ address }: Props) => {
         onBlur={handleBlur}
         aria-describedby='warehouse-selector-help'
         placeholder='Enter location (e.g., 4-016-0026-10)'
-        className={`w-full rounded border px-4 py-2 outline-none focus:ring-2 focus:ring-blue-500 ${error ? 'border-red-500' : 'border-zinc-300'}`}
+        className={`w-full rounded-sm border px-4 py-2 outline-hidden focus:ring-2 focus:ring-blue-500 ${error ? 'border-red-500' : 'border-zinc-300'}`}
       />
       {error && <div className='text-sm text-red-300'>{error}</div>}
       <div className='text-sm text-zinc-400' id='warehouse-selector-help'>
