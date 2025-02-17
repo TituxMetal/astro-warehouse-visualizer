@@ -1,5 +1,31 @@
 // src/types/warehouse.ts
 
+export interface CellWithDetails {
+  id: number
+  number: number
+  locationsPerAisle: number
+  levelsPerLocation: number
+  aisles: {
+    id: number
+    number: number
+    isOdd: boolean
+    bays: {
+      id: number
+      number: number
+      width: number
+    }[]
+    locations: {
+      id: number
+      position: number
+      level: number
+      isPicking: boolean
+    }[]
+  }[]
+  _count: {
+    aisles: number
+  }
+}
+
 export type LocationType = 'odd' | 'even' | 'both'
 
 export interface AisleConfig {
