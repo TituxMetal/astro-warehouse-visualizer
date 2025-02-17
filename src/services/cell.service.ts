@@ -2,6 +2,7 @@
 import type { Prisma } from '@prisma/client'
 import { prisma } from '~/lib/prisma'
 import type { CellConfigForm } from '~/schemas/implementation.schema'
+import type { CellWithDetails } from '~/types/warehouse'
 import { generateLevels } from '~/utils/implementation'
 import { createLocationsInBatches } from './createLocationsInBatches'
 
@@ -79,6 +80,26 @@ export const cellService = {
             aisles: true
           }
         }
+      }
+    })
+  },
+  async getCellsWithDetails(): Promise<CellWithDetails[]> {
+    return await prisma.cell.findMany({
+      include: {
+        aisles: {
+          include: {
+            bays: true,
+            locations: true
+          }
+        },
+        _count: {
+          select: {
+            aisles: true
+          }
+        }
+      },
+      orderBy: {
+        number: 'asc'
       }
     })
   }
