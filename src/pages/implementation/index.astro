@@ -2,27 +2,11 @@
 // src/pages/implementation/index.astro
 import { ViewTransitions } from 'astro:transitions'
 import BaseLayout from '~/layouts/BaseLayout.astro'
-import { prisma } from '~/lib/prisma'
+import { cellService } from '~/services/cell.service'
+import type { CellWithDetails } from '~/types/warehouse'
 
 // Fetch existing cells with their details
-const cells = await prisma.cell.findMany({
-  include: {
-    aisles: {
-      include: {
-        bays: true,
-        locations: true
-      }
-    },
-    _count: {
-      select: {
-        aisles: true
-      }
-    }
-  },
-  orderBy: {
-    number: 'asc'
-  }
-})
+const cells: CellWithDetails[] = await cellService.getCellsWithDetails()
 ---
 
 <BaseLayout title='Warehouse Implementation'>
