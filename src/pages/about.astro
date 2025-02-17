@@ -1,12 +1,14 @@
 ---
 // src/pages/about.astro
 import { Icon } from 'astro-icon/components'
-import { ViewTransitions } from 'astro:transitions'
+import { ClientRouter } from 'astro:transitions'
 import BaseLayout from '~/layouts/BaseLayout.astro'
 ---
 
 <BaseLayout title='About - Warehouse Visualizer'>
-  <ViewTransitions />
+  <head slot='head'>
+    <ClientRouter />
+  </head>
 
   <main class='container mx-auto px-4 py-8'>
     <article class='mx-auto max-w-4xl'>

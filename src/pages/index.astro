@@ -1,11 +1,13 @@
 ---
 // src/pages/index.astro
-import { ViewTransitions } from 'astro:transitions'
+import { ClientRouter } from 'astro:transitions'
 import BaseLayout from '~/layouts/BaseLayout.astro'
 ---
 
 <BaseLayout title='Warehouse Visualizer'>
-  <ViewTransitions />
+  <head slot='head'>
+    <ClientRouter />
+  </head>
 
   <main class='container mx-auto px-4 py-8'>
     <div class='mx-auto max-w-4xl space-y-8'>
@@ -71,19 +73,19 @@ import BaseLayout from '~/layouts/BaseLayout.astro'
             <div class='space-y-4'>
               <p class='text-zinc-300'>Storage location example:</p>
               <div class='grid grid-cols-2 gap-3'>
-                <div class='rounded bg-zinc-700 p-3'>
+                <div class='rounded-sm bg-zinc-700 p-3'>
                   <span class='text-sm text-zinc-300'>Cell</span>
                   <p class='font-mono text-xl'>4</p>
                 </div>
-                <div class='rounded bg-zinc-700 p-3'>
+                <div class='rounded-sm bg-zinc-700 p-3'>
                   <span class='text-sm text-zinc-300'>Aisle</span>
                   <p class='font-mono text-xl'>016</p>
                 </div>
-                <div class='rounded bg-zinc-700 p-3'>
+                <div class='rounded-sm bg-zinc-700 p-3'>
                   <span class='text-sm text-zinc-300'>Position</span>
                   <p class='font-mono text-xl'>0010</p>
                 </div>
-                <div class='rounded bg-zinc-700 p-3'>
+                <div class='rounded-sm bg-zinc-700 p-3'>
                   <span class='text-sm text-zinc-300'>Level</span>
                   <p class='font-mono text-xl'>40</p>
                 </div>
@@ -106,19 +108,19 @@ import BaseLayout from '~/layouts/BaseLayout.astro'
             <div class='space-y-4'>
               <p class='text-zinc-300'>Picking location example:</p>
               <div class='grid grid-cols-2 gap-3'>
-                <div class='rounded bg-zinc-700 p-3'>
+                <div class='rounded-sm bg-zinc-700 p-3'>
                   <span class='text-sm text-zinc-300'>Cell</span>
                   <p class='font-mono text-xl'>4</p>
                 </div>
-                <div class='rounded bg-zinc-700 p-3'>
+                <div class='rounded-sm bg-zinc-700 p-3'>
                   <span class='text-sm text-zinc-300'>Aisle</span>
                   <p class='font-mono text-xl'>016</p>
                 </div>
-                <div class='rounded bg-zinc-700 p-3'>
+                <div class='rounded-sm bg-zinc-700 p-3'>
                   <span class='text-sm text-zinc-300'>Position</span>
                   <p class='font-mono text-xl'>0010</p>
                 </div>
-                <div class='rounded bg-amber-900 p-3'>
+                <div class='rounded-sm bg-amber-900 p-3'>
                   <span class='text-sm text-amber-200'>Level</span>
                   <p class='font-mono text-xl text-amber-200'>00</p>
                 </div>

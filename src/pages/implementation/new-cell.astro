@@ -1,12 +1,14 @@
 ---
 // src/pages/implementation/new-cell.astro
-import { ViewTransitions } from 'astro:transitions'
+import { ClientRouter } from 'astro:transitions'
 import { CellForm } from '~/components/CellForm'
 import BaseLayout from '~/layouts/BaseLayout.astro'
 ---
 
 <BaseLayout title='Create New Cell'>
-  <ViewTransitions />
+  <head slot='head'>
+    <ClientRouter />
+  </head>
 
   <main class='container mx-auto px-4 py-8'>
     <h1 class='text-3xl font-bold'>Create New Cell</h1>

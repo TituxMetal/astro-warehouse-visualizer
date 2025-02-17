@@ -1,6 +1,6 @@
 ---
 // src/pages/warehouse/cell/[cell].astro
-import { ViewTransitions } from 'astro:transitions'
+import { ClientRouter } from 'astro:transitions'
 import { Breadcrumb } from '~/components/Breadcrumb'
 import { CellVisualization } from '~/components/CellVisualization'
 import BaseLayout from '~/layouts/BaseLayout.astro'
@@ -33,7 +33,9 @@ if (!cellData) {
 ---
 
 <BaseLayout title={`Cell ${cellNumber} - Warehouse Overview`}>
-  <ViewTransitions />
+  <head slot='head'>
+    <ClientRouter />
+  </head>
 
   <main class='container mx-auto px-4 py-8'>
     <Breadcrumb cell={cellNumber} showLocation client:load />

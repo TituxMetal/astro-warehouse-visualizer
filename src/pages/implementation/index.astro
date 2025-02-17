@@ -1,6 +1,6 @@
 ---
 // src/pages/implementation/index.astro
-import { ViewTransitions } from 'astro:transitions'
+import { ClientRouter } from 'astro:transitions'
 import BaseLayout from '~/layouts/BaseLayout.astro'
 import { cellService } from '~/services/cell.service'
 import type { CellWithDetails } from '~/types/warehouse'
@@ -10,7 +10,9 @@ const cells: CellWithDetails[] = await cellService.getCellsWithDetails()
 ---
 
 <BaseLayout title='Warehouse Implementation'>
-  <ViewTransitions />
+  <head slot='head'>
+    <ClientRouter />
+  </head>
 
   <main class='container mx-auto px-4 py-8'>
     <div class='mx-auto max-w-4xl'>

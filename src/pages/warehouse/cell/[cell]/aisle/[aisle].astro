@@ -1,6 +1,6 @@
 ---
 // src/pages/warehouse/cell/[cell]/aisle/[aisle].astro
-import { ViewTransitions } from 'astro:transitions'
+import { ClientRouter } from 'astro:transitions'
 import { AisleVisualization } from '~/components/AisleVisualization'
 import { Breadcrumb } from '~/components/Breadcrumb'
 import BaseLayout from '~/layouts/BaseLayout.astro'
@@ -42,7 +42,9 @@ if (!activeCell) {
 ---
 
 <BaseLayout title={`Cell ${cellNumber} - Aisle ${formattedAisle}`}>
-  <ViewTransitions />
+  <head slot='head'>
+    <ClientRouter />
+  </head>
 
   <main class='container mx-auto px-4 py-8'>
     <Breadcrumb cell={cellNumber} aisle={aisleNumber} client:load />

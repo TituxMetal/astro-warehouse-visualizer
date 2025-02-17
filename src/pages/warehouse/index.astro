@@ -1,6 +1,6 @@
 ---
 // src/pages/warehouse/index.astro
-import { ViewTransitions } from 'astro:transitions'
+import { ClientRouter } from 'astro:transitions'
 import { WarehouseOverview } from '~/components/WarehouseOverview'
 import BaseLayout from '~/layouts/BaseLayout.astro'
 import { cellService } from '~/services/cell.service'
@@ -9,7 +9,9 @@ const cells = await cellService.getAllCells()
 ---
 
 <BaseLayout title='Warehouse Overview'>
-  <ViewTransitions />
+  <head slot='head'>
+    <ClientRouter />
+  </head>
 
   <main class='container mx-auto min-h-full bg-zinc-900 px-4 py-8 text-zinc-100'>
     <WarehouseOverview client:load cells={cells} />

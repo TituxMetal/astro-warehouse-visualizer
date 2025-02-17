@@ -1,6 +1,6 @@
 ---
 // src/pages/warehouse/cell/[cell]/aisle/[aisle]/[location].astro
-import { ViewTransitions } from 'astro:transitions'
+import { ClientRouter } from 'astro:transitions'
 import { Breadcrumb } from '~/components/Breadcrumb'
 import { LocationSelector } from '~/components/LocationSelector'
 import { LocationVisualization } from '~/components/LocationVisualization'
@@ -41,7 +41,9 @@ const formattedAddress = formatAddress(selectedLocation)
 <BaseLayout
   title={`Cell ${cellNumber}, Aisle ${aisleNumber}, Location ${location} - Warehouse Visualization`}
 >
-  <ViewTransitions />
+  <head slot='head'>
+    <ClientRouter />
+  </head>
 
   <main class='container mx-auto px-4 py-8'>
     <Breadcrumb cell={selectedLocation.cell} aisle={selectedLocation.aisle} showLocation={true} />
